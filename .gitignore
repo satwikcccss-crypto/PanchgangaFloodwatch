@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production build
+/dist
+/build
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Google IDX
+.idx/workspace/
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.npm
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Vite
+dist-ssr
+*.local
+
+# Editor
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# User-specific files
+/src/assets/images/sensors/*
+!/src/assets/images/sensors/.gitkeep
+
+# Deployment artifacts
+*.zip
+*.tar.gz
+deployment/
