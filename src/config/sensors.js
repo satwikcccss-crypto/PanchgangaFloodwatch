@@ -118,9 +118,9 @@ export const SENSORS = [
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Jayanti Nala',
     location: {
-      // Central Kolhapur urban nala — KMC drainage map reference (update with field DMS when available)
-      lat: 16.7000,
-      lng: 74.2300
+      // DMS: 16°42'01.61"N 74°13'52.65"E (field-verified)
+      lat: 16.700447,
+      lng: 74.231292
     },
     district: 'Kolhapur',
     authority: 'Kolhapur Municipal Corporation (KMC)',
