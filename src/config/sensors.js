@@ -10,6 +10,7 @@ export const SENSORS = [
     },
     district: 'Kolhapur',
     authority: 'Kolhapur Municipal Corporation (KMC)',
+    sensorType: 'IoT Ultrasonic / RTDAS',
     description: 'Verified urban nala crossing from KMC drainage + WRD flood-line maps (central Kolhapur on Jayanti Nala joining Panchganga). Uses Rajaram KT Weir MSL standards.',
     dangerLevels: {
       warning: 542.07,
@@ -25,11 +26,12 @@ export const SENSORS = [
     channelId: 'YOUR_CHANNEL_ID_2',
     apiKey: 'YOUR_API_KEY_2',
     location: {
-      lat: 16.7112,
-      lng: 74.2238
+      lat: 16.7119,
+      lng: 74.2722
     },
     district: 'Kolhapur',
     authority: 'Kolhapur Municipal Corporation (KMC)',
+    sensorType: 'IoT Ultrasonic / RTDAS',
     description: 'Wadange GD station, immediate upstream of Shivaji Bridge area. Uses Rajaram KT Weir MSL alert baseline.',
     dangerLevels: {
       warning: 542.07,
@@ -50,6 +52,7 @@ export const SENSORS = [
     },
     district: 'Kolhapur',
     authority: 'WRD Maharashtra',
+    sensorType: 'IoT Ultrasonic / RTDAS',
     description: 'Official GD station at Ichalkaranji bridge on main Panchganga stem. Thresholds per WRD RTDSS Krishna.',
     dangerLevels: {
       warning: 536.56,
@@ -70,6 +73,7 @@ export const SENSORS = [
     },
     district: 'Kolhapur',
     authority: 'WRD Maharashtra',
+    sensorType: 'IoT Ultrasonic / RTDAS',
     description: 'GD station at Kasari tributary. Alert levels confirmed via RTDSS Krishna (RBL 532.0m).',
     dangerLevels: {
       warning: 543.00,
@@ -90,6 +94,7 @@ export const SENSORS = [
     },
     district: 'Kolhapur',
     authority: 'WRD Maharashtra',
+    sensorType: 'IoT Ultrasonic / RTDAS',
     description: 'GD station at Balinga bridge (Bhogawati). Alert levels confirmed via RTDSS Krishna (RBL 530.5m).',
     dangerLevels: {
       warning: 542.00,

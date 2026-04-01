@@ -4,7 +4,6 @@ import { Info, Clock, Wifi, WifiOff, Type, Globe } from 'lucide-react';
 
 const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate, currentPage }) => {
   const [time, setTime] = useState(new Date());
-  const [lang, setLang] = useState('EN');
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -14,10 +13,6 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
   const toggleFontSize = () => {
     const currentSize = document.documentElement.style.fontSize;
     document.documentElement.style.fontSize = currentSize === '110%' ? '100%' : '110%';
-  };
-
-  const toggleLang = () => {
-    setLang(l => l === 'EN' ? 'MR' : 'EN');
   };
 
   return (
@@ -76,13 +71,6 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
             title="Toggle Text Size"
           >
             <Type className="w-3 h-3" /> A±
-          </button>
-          <button 
-            onClick={toggleLang}
-            className="flex items-center gap-1 px-2 py-1.5 border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-academic-blue rounded font-bold text-[10px] uppercase transition-all"
-            title="Toggle Language"
-          >
-            <Globe className="w-3 h-3" /> {lang}
           </button>
         </div>
 

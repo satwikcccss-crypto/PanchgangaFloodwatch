@@ -146,6 +146,30 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
           <Polyline positions={panchgangaPath} pathOptions={{ ...pathOptions, color: '#3b82f6', weight: 5, dashArray: 'none' }} />
           <Polyline positions={jayantiPath} pathOptions={nalaOptions} />
           
+          {/* POINTS OF INTEREST */}
+          {RIVER_POI.map((poi) => (
+            <CircleMarker
+              key={poi.id}
+              center={poi.location}
+              radius={6}
+              pathOptions={{
+                color: '#475569',
+                fillColor: '#94a3b8',
+                fillOpacity: 0.8,
+                weight: 2,
+              }}
+            >
+              <Popup className="radar-popup">
+                <div className="p-1 px-2">
+                  <span className="text-xl inline-block mb-1">{poi.icon}</span>
+                  <h3 className="font-serif font-black text-slate-800 text-sm">{poi.name}</h3>
+                  <p className="text-[10px] text-slate-500 mt-1">{poi.description}</p>
+                </div>
+              </Popup>
+            </CircleMarker>
+          ))}
+
+          {/* SENSORS */}
           {SENSORS.map((sensor) => {
 
             const data = sensorData?.[sensor.id];
@@ -173,12 +197,36 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">{sensor.authority}</span>
                             <h3 className="font-serif font-black text-academic-blue text-sm uppercase leading-tight mt-0.5">{sensor.name}</h3>
                         </div>
-                        <p className="text-[10px] text-slate-500 leading-relaxed italic border-l-2 border-slate-100 pl-2">
-                            {sensor.description}
-                        </p>
-                        <div className="pt-2 border-t border-slate-50 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Live Telemetry Active</span>
+                        <div className="flex flex-col gap-1 text-[10px]">
+                          <div className="flex justify-between items-center text-slate-600 bg-slate-50 px-2 py-1 rounded">
+                            <span className="font-semibold">Current Level:</span>
+                            <span className="font-bold text-academic-blue">{data?.waterLevel?.toFixed(2) || '--'} m MSL</span>
+                          </div>
+                          <div className="flex justify-between text-amber-600 px-2 border-b border-slate-100 pb-0.5">
+                            <span>Warning:</span>
+                            <span className="font-semibold">{sensor.dangerLevels.warning}m</span>
+                          </div>
+                          <div className="flex justify-between text-orange-600 px-2 border-b border-slate-100 pb-0.5">
+                            <span>Danger:</span>
+                            <span className="font-semibold">{sensor.dangerLevels.danger}m</span>
+                          </div>
+                          <div className="flex justify-between text-red-600 px-2">
+                            <span>HFL:</span>
+                            <span className="font-semibold">{sensor.dangerLevels.hfl}m</span>
+                          </div>
+                        </div>
+                        <div className="pt-2 border-t border-slate-50 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1.5">
+                              <div className={`w-1.5 h-1.5 rounded-full ${data?.isMockData ? 'bg-amber-500' : 'bg-emerald-500'} animate-pulse`} />
+                              <span className={`text-[9px] font-bold uppercase tracking-widest ${data?.isMockData ? 'text-amber-600' : 'text-slate-400'}`}>
+                                {data?.isMockData ? 'Mode: Demo Data' : 'Live Telemetry Active'}
+                              </span>
+                            </div>
+                            {data?.timestamp && (
+                              <span className="text-[8px] font-mono text-slate-400">
+                                {new Date(data.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            )}
                         </div>
                     </div>
                     <MicroRadarGauge sensor={sensor} data={data} />

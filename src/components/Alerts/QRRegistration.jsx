@@ -2,7 +2,7 @@ import React from 'react';
 import { QrCode, MessageSquare, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
-const GOOGLE_FORM_URL = 'https://forms.gle/GAZjQs2jCN8zafsWA';
+import { ALERT_CONFIG } from '../../config/alerts';
 
 const QRRegistration = () => {
   return (
@@ -21,7 +21,7 @@ const QRRegistration = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white/40 p-4 rounded-2xl border border-white/60">
         <div className="md:col-span-3 flex justify-center">
             <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-                <QRCodeSVG value={GOOGLE_FORM_URL} size={100} bgColor="#ffffff" fgColor="#1e293b" level="H" />
+                <QRCodeSVG value={ALERT_CONFIG.registrationFormUrl} size={100} bgColor="#ffffff" fgColor="#1e293b" level="H" />
             </div>
         </div>
 
@@ -46,7 +46,7 @@ const QRRegistration = () => {
         <div className="md:col-span-4 flex flex-col justify-center gap-3">
             <p className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter text-center">Join 2000+ local Residents</p>
             <button 
-                onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
+                onClick={() => window.open(ALERT_CONFIG.registrationFormUrl, '_blank')}
                 className="w-full py-3 bg-academic-blue hover:bg-blue-900 text-white rounded-xl font-bold tracking-widest text-[10px] uppercase transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
             >
                 <MessageSquare className="w-4 h-4" /> Open Form

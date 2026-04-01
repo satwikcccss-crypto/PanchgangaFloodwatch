@@ -26,7 +26,7 @@ const StatCard = ({ sensor, data, index, onClick }) => {
       transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
       whileHover={{ y: -3, transition: { duration: 0.2 } }}
       onClick={() => onClick && onClick(sensor.id)}
-      className="floating-card cursor-pointer group"
+      className="bg-white rounded-xl p-4 border shadow-sm transition-all duration-300 cursor-pointer group relative overflow-hidden"
       style={{ borderColor: `${alertConfig.color}20` }}
     >
       {/* Top glow bar */}
@@ -43,10 +43,10 @@ const StatCard = ({ sensor, data, index, onClick }) => {
             style={{ backgroundColor: isActive ? alertConfig.color : '#475569' }}
           />
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-white truncate leading-tight">
+            <h3 className="text-sm font-bold text-academic-blue truncate leading-tight">
               {sensor.name}
             </h3>
-            <p className="text-[10px] text-slate-500 truncate">{sensor.sensorType}</p>
+            <p className="text-[10px] text-slate-500 font-medium truncate">{sensor.sensorType}</p>
           </div>
         </div>
         <span 
@@ -65,10 +65,10 @@ const StatCard = ({ sensor, data, index, onClick }) => {
       <div className="flex items-end justify-between mb-3">
         <div>
           <div className="flex items-baseline gap-1">
-            <span className="stat-number text-2xl font-bold text-white">
+            <span className="stat-number text-2xl font-black text-slate-800">
               {waterLevel !== null && waterLevel !== undefined ? waterLevel.toFixed(2) : '--'}
             </span>
-            <span className="text-xs text-slate-400 font-medium">m MSL</span>
+            <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">m MSL</span>
           </div>
           <div className="flex items-center gap-1 mt-1">
             {getTrendIcon()}
@@ -98,7 +98,7 @@ const StatCard = ({ sensor, data, index, onClick }) => {
       </div>
 
       {/* Footer: Thresholds */}
-      <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] text-slate-500">
+      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10px] font-bold text-slate-400">
         <span>W: {sensor.dangerLevels.warning}m</span>
         <span>D: {sensor.dangerLevels.danger}m</span>
         <span>HFL: {sensor.dangerLevels.hfl}m</span>

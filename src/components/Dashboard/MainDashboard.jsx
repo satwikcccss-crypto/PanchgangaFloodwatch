@@ -53,10 +53,15 @@ const InfoPanel = ({ isOpen, onClose }) => (
             <p className="text-[11px] font-mono leading-relaxed text-academic-blue my-3 p-3 bg-slate-50 border border-slate-200 rounded-lg shadow-inner">
               "IOT and Geoinformatics Based Flood Monitoring And prediction system"
             </p>
-            <p className="text-sm leading-relaxed text-slate-600 font-medium">
+            <p className="text-sm leading-relaxed text-slate-600 font-medium mb-3">
               Under the guidance of <strong>Dr. S. S. Panhalkar Sir</strong> & <strong>Dr. G. S. Nivhekar Sir</strong>.<br/>
               Developed by <strong>Er. Satwik K. Udupi</strong>.
             </p>
+            <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider space-y-1">
+              <p>📍 Location: Shivaji University, Vidya Nagar, Kolhapur - 416004</p>
+              <p>🗂️ Version: 1.2 (Deployed: Dec 2024)</p>
+              <p>📡 Data Sources: CWC | WRD RTDSS Krishna | Custom RTDAS</p>
+            </div>
           </section>
 
           <section>
@@ -72,9 +77,13 @@ const InfoPanel = ({ isOpen, onClose }) => (
                 <span>Police Control Room</span>
                 <span className="text-academic-blue">100</span>
               </div>
-              <div className="flex justify-between font-bold text-slate-700 pt-2">
+              <div className="flex justify-between font-bold text-slate-700 border-b border-slate-200 pb-2 pt-2">
                 <span>Disaster Management</span>
                 <span className="text-academic-blue">108</span>
+              </div>
+              <div className="flex justify-between font-bold text-slate-700 pt-2">
+                <span>WRD Maharashtra</span>
+                <span className="text-academic-blue">022-22027990</span>
               </div>
             </div>
           </section>
@@ -136,6 +145,11 @@ const MainDashboard = ({ onNavigate }) => {
 
         {/* Top: Alert Status */}
         <AlertBanner alertLevel={overallAlert} />
+
+        {/* Top: Quick Stats (Added per Audit) */}
+        <div className="mt-4">
+          <StatsOverview sensorData={sensorData} onSensorClick={setSelectedSensorId} />
+        </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 mt-6">
           {/* Left Column: Visual Monitoring */}
@@ -205,6 +219,17 @@ const MainDashboard = ({ onNavigate }) => {
             <QRRegistration />
             
           </div>
+        </div>
+
+        {/* Disclaimer Footer */}
+        <div className="mt-12 pt-6 border-t border-slate-200 flex flex-col items-center justify-center text-center gap-2">
+            <div className="flex items-center gap-1.5 text-slate-400">
+                <Info className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">Academic Data Disclaimer</span>
+            </div>
+            <p className="text-xs text-slate-500 font-medium max-w-3xl leading-relaxed">
+                This dashboard displays prototypical R&D data intended strictly for informational and research purposes under the DST-SERB grant. The station readings presented act as preliminary indices. For official emergency decisions or evacuation notices, always refer to authoritative data from the <strong className="text-slate-600">Central Water Commission (CWC)</strong> and <strong className="text-slate-600">Water Resources Department (WRD), Maharashtra</strong>.
+            </p>
         </div>
       </div>
 
