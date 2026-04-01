@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, ShieldAlert, Activity, Map as MapIcon,
-  Phone, Globe, Info, BookOpen, AlertCircle
+  Phone, Globe, Info, BookOpen, AlertCircle,
+  Radio, Clock
 } from 'lucide-react';
 import HeaderBar from './HeaderBar';
 import StatsOverview from './StatsOverview';
@@ -185,7 +186,50 @@ const MainDashboard = ({ onNavigate }) => {
         {/* Alert Banner */}
         <AlertBanner alertLevel={overallAlert} />
 
-        {/* Station Summary Cards — was missing, now rendered */}
+        {/* Engineering Telemetry Status Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl">
+            <div className="flex items-center gap-2 mb-1">
+              <Activity className="w-3.5 h-3.5 text-blue-400" />
+              <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest">Active nodes</span>
+            </div>
+            <div className="text-xl font-mono font-bold text-white">05 <span className="text-[10px] text-slate-500 uppercase">of 05</span></div>
+          </div>
+          
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl">
+            <div className="flex items-center gap-2 mb-1">
+              <Globe className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Gateway</span>
+            </div>
+            <div className="text-[13px] font-mono font-bold text-white truncate">SU - RTDAS - 01</div>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-[10px] font-bold text-amber-300 uppercase tracking-widest">Latency</span>
+            </div>
+            <div className="text-[13px] font-mono font-bold text-white">&lt; 1500ms</div>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl max-lg:hidden">
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldAlert className="w-3.5 h-3.5 text-blue-400" />
+              <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest">Protocol</span>
+            </div>
+            <div className="text-[13px] font-mono font-bold text-white uppercase italic">TLS 1.3 / AES</div>
+          </div>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl">
+            <div className="flex items-center gap-2 mb-1">
+              <Radio className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest">Uplink</span>
+            </div>
+            <div className="text-[13px] font-mono font-bold text-white">ThingSpeak API</div>
+          </div>
+        </div>
+
+        {/* Station Summary Cards */}
         <StatsOverview sensorData={sensorData} onSensorClick={setSelectedSensorId} />
 
         {/* Main Grid */}

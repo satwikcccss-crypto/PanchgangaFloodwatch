@@ -50,12 +50,7 @@ const RadarNetwork = ({ onNavigate }) => {
             </p>
           </div>
           
-          <div className="academic-panel px-4 py-2 bg-blue-50/50 border-blue-100 flex items-center gap-2">
-            <Info className="w-4 h-4 text-blue-500" />
-            <span className="text-[10px] font-bold text-blue-700 uppercase tracking-widest">
-              Live MSL datum based on Rajaram KT Weir standard
-            </span>
-          </div>
+
         </div>
 
         <motion.div 

@@ -28,11 +28,12 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
             />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-2xl lg:text-3xl font-bold font-serif text-academic-blue tracking-tight leading-none">
-              Shivaji University
+            <h1 className="text-xl lg:text-2xl font-bold font-serif text-academic-blue tracking-tight leading-snug max-w-md">
+              Realtime River Water Level Monitoring System<br/>
+              <span className="text-lg lg:text-xl">Shivaji University, Kolhapur</span>
             </h1>
-            <h2 className="text-[10px] lg:text-xs font-semibold text-academic-gold uppercase tracking-widest mt-1">
-              CCCSS • PANCHGANGA FLOODWATCH
+            <h2 className="text-[9px] lg:text-[10px] font-bold text-academic-gold uppercase tracking-[0.2em] mt-1.5 opacity-90">
+              Developed by: Centre for Climate Change and Sustainability Studies (CCCSS)
             </h2>
           </div>
         </div>
