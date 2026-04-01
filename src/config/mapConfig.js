@@ -4,8 +4,8 @@
  */
 
 export const MAP_CONFIG = {
-  defaultCenter: [16.7050, 74.2433],
-  defaultZoom: 12,
+  defaultCenter: [16.7050, 74.2800],   // geographic centre of all 5 RTDAS stations
+  defaultZoom: 11,
   minZoom: 10,
   maxZoom: 18,
   

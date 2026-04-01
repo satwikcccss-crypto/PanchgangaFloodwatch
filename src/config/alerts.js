@@ -9,7 +9,7 @@
  */
 
 export const ALERT_CONFIG = {
-  registrationFormUrl: 'https://forms.gle/YOUR_GOOGLE_FORM_ID',
+  registrationFormUrl: 'https://forms.gle/GAZjQs2jCN8zafsWA',
   
   qrCode: {
     size: 256,
