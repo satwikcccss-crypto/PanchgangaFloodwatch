@@ -17,8 +17,8 @@ export const SENSORS = [
     id: 'shivaji_bridge',
     name: 'Chhatrapati Shivaji Maharaj Bridge',
     shortName: 'CSM Bridge',
-    channelId: 'YOUR_CHANNEL_ID_1',
-    apiKey: 'YOUR_API_KEY_1',
+    channelId: '2505527',
+    apiKey: 'GIPQ7GZ7IPG1I0GE',
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -30,9 +30,9 @@ export const SENSORS = [
     authority: 'Kolhapur Municipal Corporation (KMC)',
     description: 'Ultrasonic radar sensor on the Chhatrapati Shivaji Maharaj Bridge over the Panchganga River, Kolhapur. Monitors real-time water stage at the primary urban crossing. Alert thresholds referenced to Rajaram KT Weir MSL datum (WRD Maharashtra).',
     dangerLevels: {
-      warning: 542.07,
-      danger: 543.30,
-      extreme: 545.61,
+      warning: 542.01,
+      danger: 543.00,
+      extreme: 545.00,
       hfl: 547.13
     },
     markerColor: '#0f4c81'

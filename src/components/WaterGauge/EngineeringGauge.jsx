@@ -57,7 +57,7 @@ export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) =>
 
       <div className="relative mt-2 flex-grow min-h-[180px]">
         <div className="survey-staff-container h-full max-h-[350px]">
-          <div className="relative h-full">
+          <div className="relative h-full w-20 mx-auto">
             {/* Scale labels on the LEFT */}
             <div className="absolute right-full top-0 bottom-0 w-10 z-10 pointer-events-none pr-2">
                 {ticks.filter(t => (t * 10) % 5 === 0).map(tick => (
