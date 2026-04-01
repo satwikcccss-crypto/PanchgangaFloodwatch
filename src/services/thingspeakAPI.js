@@ -117,11 +117,11 @@ const determineAlertLevel = (waterLevel, dangerLevels) => {
  */
 const generateMockData = (sensor) => {
   const baseLevel = {
-    balinga: 541.2,
-    nitawade: 542.5,
-    shivaji: 541.8,
-    ichalkaranji: 535.2,
-    jayanti: 540.5
+    jayanti_nala: 540.5,
+    shivaji_bridge: 541.8,
+    ichalkaranji_br: 535.2,
+    nitawade_kt: 542.5,
+    balinga_br: 541.2
   }[sensor.id] || 540.0;
   
   const variation = (Math.random() - 0.5) * 1.0;
@@ -151,11 +151,11 @@ const generateMockHistoricalData = (sensor, points = 150) => {
   const data = [];
   const now = new Date();
   const baseLevel = {
-    balinga: 541.2,
-    nitawade: 542.5,
-    shivaji: 541.8,
-    ichalkaranji: 535.2,
-    jayanti: 540.5
+    jayanti_nala: 540.5,
+    shivaji_bridge: 541.8,
+    ichalkaranji_br: 535.2,
+    nitawade_kt: 542.5,
+    balinga_br: 541.2
   }[sensor.id] || 540.0;
   
   for (let i = points - 1; i >= 0; i--) {
