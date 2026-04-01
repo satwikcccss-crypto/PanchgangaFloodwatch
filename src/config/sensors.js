@@ -22,9 +22,9 @@ export const SENSORS = [
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
-      // DMS: 16.42 26.16N and 73.13 2.68E
-      lat: 16.707267,
-      lng: 73.217411
+      // DMS: 16°42'25.83"N 74°13'03.09"E
+      lat: 16.707175,
+      lng: 74.217525
     },
     district: 'Kolhapur',
     authority: 'Kolhapur Municipal Corporation (KMC)',
