@@ -21,7 +21,7 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
         <div className="flex items-center gap-4 border-r border-slate-200 pr-6 mr-2">
           <div className="p-1">
             <img 
-              src="/cccss_logo.png" 
+              src="./cccss_logo.png" 
               alt="Shivaji University CCCSS" 
               className="h-14 lg:h-16 object-contain"
               onError={(e) => { e.target.src = 'https://upload.wikimedia.org/wikipedia/en/b/b3/Shivaji_University_logo.png'; }}

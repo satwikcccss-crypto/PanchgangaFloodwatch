@@ -73,16 +73,7 @@ const RadarNetwork = ({ onNavigate }) => {
           ))}
         </motion.div>
         
-        {/* Trial Basis Disclaimer */}
-        <div className="mt-12 academic-panel p-6 border-l-4 border-amber-500 bg-amber-50/30">
-            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest mb-2 flex items-center gap-2">
-                Institutional Trial Notice
-            </h4>
-            <p className="text-[11px] leading-relaxed text-amber-900 font-medium italic">
-                This Radar Sensor Network view is provided on a trial basis for the Water Resources Department (WRD) and Shivaji University CCCSS researchers. 
-                Data points are synchronized with the RTDAS Maharashtra portal hourly. Please cross-reference with official WRD GD stations for critical decision-making.
-            </p>
-        </div>
+        {/* Trial Basis Disclaimer removed */}
       </div>
 
       {zoomedSensor && (

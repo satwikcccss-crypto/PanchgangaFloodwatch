@@ -61,11 +61,14 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
  */
 export const fetchAllSensors = async () => {
   const promises = SENSORS.map(sensor =>
-    fetchLatestReading(sensor.id)
-      .then(data => ({ sensorId: sensor.id, data }))
+    fetchHistoricalData(sensor.id, 150)
+      .then(history => {
+        const data = history[history.length - 1] || generateMockData(sensor);
+        return { sensorId: sensor.id, data: { ...data, history } };
+      })
       .catch(error => ({
         sensorId: sensor.id,
-        data: generateMockData(sensor),
+        data: { ...generateMockData(sensor), history: generateMockHistoricalData(sensor, 150) },
         error: error.message
       }))
   );

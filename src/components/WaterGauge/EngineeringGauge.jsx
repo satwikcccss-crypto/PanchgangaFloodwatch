@@ -56,21 +56,22 @@ export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) =>
       )}
 
       <div className="relative mt-2 flex-grow min-h-[180px]">
-        {/* Scale labels on the LEFT */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 z-10 flex flex-col justify-between pointer-events-none pr-1">
-            {ticks.filter(t => (t * 10) % 5 === 0).map(tick => (
-              <div 
-                key={tick}
-                className="absolute right-0 text-[8px] font-mono font-bold text-slate-400"
-                style={{ bottom: `${getTopPosition(tick)}%`, transform: 'translateY(50%)' }}
-              >
-                {tick.toFixed(1)}
-              </div>
-            ))}
-        </div>
+        <div className="survey-staff-container h-full max-h-[350px]">
+          <div className="relative h-full">
+            {/* Scale labels on the LEFT */}
+            <div className="absolute right-full top-0 bottom-0 w-10 z-10 pointer-events-none pr-2">
+                {ticks.filter(t => (t * 10) % 5 === 0).map(tick => (
+                  <div 
+                    key={tick}
+                    className="absolute right-0 text-[10px] font-mono font-bold text-slate-500"
+                    style={{ bottom: `${getTopPosition(tick)}%`, transform: 'translateY(50%)' }}
+                  >
+                    {tick.toFixed(1)}
+                  </div>
+                ))}
+            </div>
 
-        <div className="survey-staff-container h-full max-h-[350px] pl-8">
-          <div className="survey-staff">
+            <div className="survey-staff h-full">
             
             {/* Background Color Zones */}
             <div className="zone-normal" style={{ height: `${getTopPosition(sensor.dangerLevels.warning)}%` }} />
@@ -118,6 +119,7 @@ export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) =>
             <div className="level-pill" style={{ bottom: `${fillPercentage}%` }}>
               {level.toFixed(2)}m
             </div>
+          </div>
           </div>
         </div>
       </div>
