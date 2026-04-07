@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, Clock, Wifi, WifiOff, Type, Globe } from 'lucide-react';
 
-const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate, currentPage }) => {
+const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate, currentPage, minimalMode = false }) => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -14,6 +14,58 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
     const currentSize = document.documentElement.style.fontSize;
     document.documentElement.style.fontSize = currentSize === '110%' ? '100%' : '110%';
   };
+
+  if (minimalMode) {
+    return (
+      <div className="flex flex-col gap-6 w-full">
+        <div className="flex items-center justify-between gap-4">
+           <div className="flex items-center gap-3">
+              <img 
+                src={`${import.meta.env.BASE_URL}cccss_logo.png`} 
+                alt="CCCSS" 
+                className="h-10 object-contain grayscale hover:grayscale-0 transition-all opacity-80"
+                onError={(e) => { e.target.src = 'https://upload.wikimedia.org/wikipedia/en/b/b3/Shivaji_University_logo.png'; }}
+              />
+              <div className="h-8 w-px bg-slate-200" />
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-slate-800 uppercase tracking-tight">Hydrological RTDAS</span>
+                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Shivaji University</span>
+              </div>
+           </div>
+           
+           <div className="flex items-center gap-2">
+             <div className="flex flex-col items-end">
+                <span className="text-sm font-mono font-black text-academic-blue leading-none">{time.toLocaleTimeString()}</span>
+                <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest">{time.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</span>
+             </div>
+           </div>
+        </div>
+
+        <nav className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200">
+          <button 
+            onClick={() => onNavigate('dashboard')}
+            className={`flex-1 py-2 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg transition-all ${
+              currentPage === 'dashboard' 
+              ? 'bg-white text-academic-blue shadow-sm' 
+              : 'text-slate-400 hover:text-academic-blue'
+            }`}
+          >
+            Dashboard
+          </button>
+          <button 
+            onClick={() => onNavigate('network')}
+            className={`flex-1 py-2 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg transition-all ${
+              currentPage === 'network' 
+              ? 'bg-white text-academic-blue shadow-sm' 
+              : 'text-slate-400 hover:text-academic-blue'
+            }`}
+          >
+            Radar Network
+          </button>
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <header className="inst-header">
