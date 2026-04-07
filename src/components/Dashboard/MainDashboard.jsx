@@ -14,7 +14,7 @@ import QRRegistration from '../Alerts/QRRegistration';
 import AlertBanner from '../Alerts/AlertBanner';
 import { fetchAllSensors } from '../../services/thingspeakAPI';
 import { SENSORS } from '../../config/sensors';
-import { getAlertConfig } from '../../config/alerts';
+import { getAlertConfig, calculateBasinRisk } from '../../config/alerts';
 
 /* ─── Info / Project Sidebar ─────────────────────────────────────────── */
 const InfoPanel = ({ isOpen, onClose }) => (
@@ -166,10 +166,8 @@ const MainDashboard = ({ onNavigate }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const overallAlert = Object.values(sensorData).reduce((max, curr) => {
-    const levels = { normal: 0, warning: 1, danger: 2, extreme: 3 };
-    return levels[curr?.alertLevel] > levels[max] ? curr.alertLevel : max;
-  }, 'normal');
+  const basinRisk = calculateBasinRisk(sensorData);
+  const overallAlert = basinRisk.level;
 
   return (
     <div className="min-h-screen flex flex-col pt-8">
@@ -183,8 +181,12 @@ const MainDashboard = ({ onNavigate }) => {
           currentPage="dashboard"
         />
 
-        {/* Alert Banner */}
-        <AlertBanner alertLevel={overallAlert} />
+        {/* Alert Banner with Station Attribution */}
+        <AlertBanner 
+          alertLevel={overallAlert} 
+          triggers={basinRisk.triggers}
+          riskTrend={basinRisk.riskTrend}
+        />
 
 
         {/* Station Summary Cards */}

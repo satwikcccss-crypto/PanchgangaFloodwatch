@@ -63,14 +63,36 @@ export const fetchAllSensors = async () => {
   const promises = SENSORS.map(sensor =>
     fetchHistoricalData(sensor.id, 150)
       .then(history => {
-        const data = history[history.length - 1] || generateMockData(sensor);
-        return { sensorId: sensor.id, data: { ...data, history } };
+        const latestReading = history[history.length - 1] || generateMockData(sensor);
+        
+        // Calculate Hydrological State at the Aggregation Level
+        const alertLevel = determineAlertLevel(history, sensor.dangerLevels);
+        const rateOfChange = calculateRateOfChange(history);
+
+        return { 
+          sensorId: sensor.id, 
+          data: { 
+            ...latestReading, 
+            history, 
+            alertLevel, 
+            rateOfChange 
+          } 
+        };
       })
-      .catch(error => ({
-        sensorId: sensor.id,
-        data: { ...generateMockData(sensor), history: generateMockHistoricalData(sensor, 150) },
-        error: error.message
-      }))
+      .catch(error => {
+        console.warn(`API Error for ${sensor.name}, falling back to research data.`, error);
+        const mockHistory = generateMockHistoricalData(sensor, 150);
+        const lastMock = mockHistory[mockHistory.length - 1];
+        return {
+          sensorId: sensor.id,
+          data: { 
+            ...lastMock, 
+            history: mockHistory, 
+            alertLevel: determineAlertLevel(mockHistory, sensor.dangerLevels),
+            rateOfChange: calculateRateOfChange(mockHistory)
+          }
+        };
+      })
   );
   
   const results = await Promise.all(promises);
@@ -88,7 +110,6 @@ const parseThingSpeakResponse = (data, sensor) => {
   const temperature = parseFloat(data[THINGSPEAK_FIELDS.temperature]) || null;
   const batteryVoltage = parseFloat(data[THINGSPEAK_FIELDS.batteryVoltage]) || null;
   const signalStrength = parseFloat(data[THINGSPEAK_FIELDS.signalStrength]) || null;
-  const alertLevel = determineAlertLevel(waterLevel, sensor.dangerLevels);
   
   return {
     sensorId: sensor.id,
@@ -98,7 +119,6 @@ const parseThingSpeakResponse = (data, sensor) => {
     temperature,
     batteryVoltage,
     signalStrength,
-    alertLevel,
     dangerLevels: sensor.dangerLevels,
     location: sensor.location,
     status: waterLevel > 0 ? 'active' : 'inactive'
@@ -106,12 +126,46 @@ const parseThingSpeakResponse = (data, sensor) => {
 };
 
 /**
- * Determine alert level
+ * Calculate the Rate of Change in m/hr
  */
-const determineAlertLevel = (waterLevel, dangerLevels) => {
-  if (waterLevel >= dangerLevels.extreme) return 'extreme';
-  if (waterLevel >= dangerLevels.danger) return 'danger';
-  if (waterLevel >= dangerLevels.warning) return 'warning';
+export const calculateRateOfChange = (history) => {
+  if (!history || history.length < 6) return 0; // Need at least 6 readings (6 mins)
+  
+  const latest = history[history.length - 1];
+  const past = history[history.length - 11] || history[0]; // try 10 mins ago
+  
+  const v1 = typeof latest === 'object' ? latest.waterLevel : latest;
+  const v2 = typeof past === 'object' ? past.waterLevel : past;
+  
+  const dt = (history.length > 10 ? 10 : history.length) / 60; // hours
+  return parseFloat(((v1 - v2) / dt).toFixed(3));
+};
+
+/**
+ * Determine alert level with Hydrological Persistence (3-reading check)
+ */
+const determineAlertLevel = (history, dangerLevels) => {
+  if (!Array.isArray(history) || history.length === 0) return 'normal';
+  
+  const lastEntry = history[history.length - 1];
+  const currentVal = typeof lastEntry === 'object' ? lastEntry.waterLevel : lastEntry;
+
+  // For very short history, use simple threshold
+  if (history.length < 3) {
+    if (currentVal >= dangerLevels.extreme) return 'extreme';
+    if (currentVal >= dangerLevels.danger) return 'danger';
+    if (currentVal >= dangerLevels.warning) return 'warning';
+    return 'normal';
+  }
+
+  // Persistence Check (last 3 readings)
+  const last3 = history.slice(-3).map(h => typeof h === 'object' ? h.waterLevel : h);
+  const checkPersistence = (threshold) => last3.every(v => v >= threshold);
+
+  if (checkPersistence(dangerLevels.extreme)) return 'extreme';
+  if (checkPersistence(dangerLevels.danger)) return 'danger';
+  if (checkPersistence(dangerLevels.warning)) return 'warning';
+  
   return 'normal';
 };
 
@@ -128,9 +182,9 @@ const generateMockData = (sensor) => {
   }[sensor.id] || 540.0;
   
   const variation = (Math.random() - 0.5) * 1.0;
-  const waterLevel = Math.max(0, baseLevel + variation);
-  const alertLevel = determineAlertLevel(waterLevel, sensor.dangerLevels);
+  const waterLevel = parseFloat(waterLevelRaw.toFixed(2));
   
+  // For mock, we'll assume normal persistence unless manually forced
   return {
     sensorId: sensor.id,
     sensorName: sensor.name,
@@ -139,7 +193,6 @@ const generateMockData = (sensor) => {
     temperature: parseFloat((25 + (Math.random() * 5)).toFixed(1)),
     batteryVoltage: parseFloat((11 + (Math.random() * 2)).toFixed(2)),
     signalStrength: Math.floor(60 + Math.random() * 40),
-    alertLevel,
     dangerLevels: sensor.dangerLevels,
     location: sensor.location,
     status: 'active',

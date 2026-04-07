@@ -3,42 +3,66 @@ import { motion } from 'framer-motion';
 import { AlertCircle, ShieldAlert, CheckCircle2, Siren } from 'lucide-react';
 import { getAlertConfig } from '../../config/alerts';
 
-const AlertBanner = ({ alertLevel }) => {
+const AlertBanner = ({ alertLevel, triggers = [], riskTrend = 'stable' }) => {
   const config = getAlertConfig(alertLevel);
   
   const getIcon = () => {
     switch (alertLevel) {
-      case 'normal': return <CheckCircle2 className="w-6 h-6" />;
-      case 'warning': return <AlertCircle className="w-6 h-6" />;
-      case 'danger': return <ShieldAlert className="w-6 h-6" />;
-      case 'extreme': return <Siren className="w-6 h-6" />;
-      default: return <AlertCircle className="w-6 h-6" />;
+      case 'normal': return <CheckCircle2 className="w-6 h-6 text-emerald-500" />;
+      case 'warning': return <AlertCircle className="w-6 h-6 text-amber-500" />;
+      case 'danger': return <ShieldAlert className="w-6 h-6 text-orange-600" />;
+      case 'extreme': return <Siren className="w-6 h-6 text-red-600" />;
+      default: return <AlertCircle className="w-6 h-6 text-slate-400" />;
     }
+  };
+
+  const getStatusText = () => {
+    if (alertLevel === 'normal') {
+        if (riskTrend === 'rising') return 'Panchganga levels rising — monitoring inflow.';
+        return 'System active: all sensors within safe limits.';
+    }
+    
+    const triggerNames = triggers.length > 0 
+        ? triggers.join(' & ').toUpperCase() 
+        : 'SENSORS';
+
+    return `${triggerNames} CROSSING ${alertLevel.toUpperCase()} THRESHOLD.`;
   };
 
   return (
     <motion.div
-      initial={{ x: -20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      className={`official-alert ${alertLevel}`}
+      initial={{ y: -10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className={`official-alert ${alertLevel} border-l-[6px] shadow-sm`}
     >
       <div className="flex-shrink-0">
-        {getIcon()}
+        <div className="bg-white/90 p-2 rounded-xl shadow-inner border border-slate-100">
+           {getIcon()}
+        </div>
       </div>
       <div className="flex-grow">
         <div className="flex items-center gap-3">
-          <h2 className="text-sm font-bold uppercase tracking-widest">{config.label}</h2>
-          <span className="h-4 w-px bg-current opacity-20" />
-          <h2 className="text-sm font-bold tracking-tight">{config.labelMr}</h2>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em]">{config.label}</h2>
+          <span className="h-3 w-px bg-current opacity-20" />
+          <h2 className="text-[10px] font-black tracking-widest">{config.labelMr}</h2>
+          
+          {riskTrend !== 'stable' && (
+             <span className={`ml-auto text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                riskTrend === 'surging' ? 'bg-red-500 text-white animate-pulse' : 'bg-amber-100 text-amber-600'
+             }`}>
+                {riskTrend === 'surging' ? 'Rapid Surge Detected' : 'Basin Rising'}
+             </span>
+          )}
         </div>
-        <p className="text-[11px] font-semibold opacity-90 mt-1 uppercase tracking-tight">
-          Current Basin Status: {config.description} | {config.actionMr}
+        <p className="text-[12px] font-black tracking-tight mt-1">
+          {getStatusText()}
         </p>
       </div>
-      <div className="hidden md:block">
-        <span className="text-[10px] font-bold underline decoration-2 underline-offset-4 cursor-help">
-          CWC & WRD MAHARASHTRA STANDARDS
-        </span>
+      <div className="hidden lg:block border-l border-current/10 pl-6 ml-6">
+        <div className="flex flex-col gap-0.5">
+           <span className="text-[8px] font-black uppercase tracking-widest opacity-60">Source Standard</span>
+           <span className="text-[9px] font-bold text-slate-800">WRD RTDAS MAHARASHTRA</span>
+        </div>
       </div>
     </motion.div>
   );

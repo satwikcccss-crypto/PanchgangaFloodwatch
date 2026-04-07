@@ -15,8 +15,8 @@
 export const SENSORS = [
   {
     id: 'shivaji_bridge',
-    name: 'Chhatrapati Shivaji Maharaj Bridge',
-    shortName: 'CSM Bridge',
+    name: 'Wadange Bridge (CSM Bridge)',
+    shortName: 'Wadange',
     channelId: '2505527',
     apiKey: 'GIPQ7GZ7IPG1I0GE',
     sensorType: 'Ultrasonic Radar — RTDAS',
@@ -30,7 +30,7 @@ export const SENSORS = [
     authority: 'Kolhapur Municipal Corporation (KMC)',
     description: 'Ultrasonic radar sensor on the Chhatrapati Shivaji Maharaj Bridge over the Panchganga River, Kolhapur. Monitors real-time water stage at the primary urban crossing. Alert thresholds referenced to Rajaram KT Weir MSL datum (WRD Maharashtra).',
     dangerLevels: {
-      warning: 542.01,
+      warning: 540.00,
       danger: 543.00,
       extreme: 545.00,
       hfl: 547.13
@@ -78,10 +78,10 @@ export const SENSORS = [
     authority: 'WRD Maharashtra',
     description: 'Ultrasonic radar sensor at Nitawade Bridge over the Kasari River — a major Panchganga tributary. Monitors upstream inflow into the Kolhapur city reach. Alert levels per WRD RTDSS Krishna (RBL 532.0 m MSL).',
     dangerLevels: {
-      warning: 543.00,
-      danger: 544.00,
-      extreme: 545.50,
-      hfl: 547.00
+      warning: 544.37,
+      danger: 545.37,
+      extreme: 546.50,
+      hfl: 547.50
     },
     markerColor: '#f59e0b'
   },
@@ -102,10 +102,10 @@ export const SENSORS = [
     authority: 'WRD Maharashtra',
     description: 'Ultrasonic radar sensor at Balinge Bridge over the Bhogawati River — a western tributary feeding the Panchganga. Provides early flood signal for Kolhapur city. Alert levels per WRD RTDSS Krishna (RBL 530.5 m MSL).',
     dangerLevels: {
-      warning: 542.00,
-      danger: 543.00,
-      extreme: 544.50,
-      hfl: 546.00
+      warning: 545.30,
+      danger: 546.30,
+      extreme: 547.50,
+      hfl: 548.50
     },
     markerColor: '#10b981'
   },
@@ -126,10 +126,10 @@ export const SENSORS = [
     authority: 'Kolhapur Municipal Corporation (KMC)',
     description: 'Ultrasonic radar sensor at Wilson Bridge over the Jayanti Nala — an urban stormwater nala draining into the Panchganga within Kolhapur city. Critical for urban flood early warning. Thresholds aligned with Rajaram KT Weir MSL datum.',
     dangerLevels: {
-      warning: 542.07,
-      danger: 543.30,
-      extreme: 545.61,
-      hfl: 547.13
+      warning: 539.00,
+      danger: 541.00,
+      extreme: 543.00,
+      hfl: 545.00
     },
     markerColor: '#8b5cf6'
   }

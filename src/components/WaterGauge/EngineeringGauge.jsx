@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Activity, Target, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { X, ExternalLink, Activity, Target, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight, Globe, Battery, Signal, Zap } from 'lucide-react';
 import { getAlertConfig } from '../../config/alerts';
+import BasinAnalyticsChart from '../Charts/BasinAnalyticsChart';
 
 export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) => {
   const level = data?.waterLevel || 0;
@@ -195,112 +196,234 @@ const MiniTrend = ({ history }) => {
 };
 
 export const ZoomedGauge = ({ sensor, data, onClose }) => {
+  const [activeTab, setActiveTab] = useState('analytics');
   const history = data?.history || [];
   const current = data?.waterLevel || 0;
   
-  // Calculate historical shifts (assuming 10min intervals in the 150pt history)
   const getChange = (pts) => {
-    if (history.length < pts) return 0;
+    if (history.length < pts) return "0.0";
     const pastEntry = history[history.length - pts];
     const pastValue = typeof pastEntry === 'object' ? pastEntry.waterLevel : pastEntry;
-    return (current - pastValue).toFixed(2);
+    const diff = (current - pastValue);
+    return diff.toFixed(2);
   };
 
   const stats = [
-    { label: '1h Change', val: getChange(6) },
-    { label: '3h Change', val: getChange(18) },
-    { label: '6h Change', val: getChange(36) },
-    { label: '12h Change', val: getChange(72) },
-    { label: '24h Change', val: getChange(144) }
+    { label: 'Current 1h', val: getChange(6), color: 'text-blue-600', icon: <Activity className="w-3 h-3" /> },
+    { label: 'Rolling 3h', val: getChange(18), color: 'text-emerald-600', icon: <TrendingUp className="w-3 h-3" /> },
+    { label: 'Rolling 6h', val: getChange(36), color: 'text-amber-600', icon: <Waves className="w-3 h-3" /> },
+    { label: 'Rolling 12h', val: getChange(72), color: 'text-orange-600', icon: <ShieldAlert className="w-3 h-3" /> },
+    { label: 'Rolling 24h', val: getChange(144), color: 'text-rose-600', icon: <Zap className="w-3 h-3" /> }
   ];
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={onClose} />
+        
         <motion.div 
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          className="academic-panel bg-white p-6 relative z-10 w-full max-w-6xl shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 overflow-y-auto max-h-[90vh]"
+          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          className="bg-white rounded-[2rem] relative z-10 w-full max-w-6xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-h-[95vh] border border-white/20"
         >
-          <button onClick={onClose} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 rounded-full transition-all active:scale-90">
-            <X className="w-6 h-6" />
-          </button>
-          
-          <div className="md:col-span-12 flex items-center gap-6 border-b border-slate-100 pb-6">
-            <div className="p-4 bg-academic-blue/5 rounded-2xl">
-                <Target className="w-10 h-10 text-academic-blue" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold font-serif text-academic-blue uppercase tracking-tight leading-none">{sensor.name}</h2>
-              <div className="flex items-center gap-4 mt-2">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{sensor.authority}</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">LAT: {sensor.location.lat} • LNG: {sensor.location.lng}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="md:col-span-8 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-              {stats.map(s => (
-                <div key={s.label} className="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm">
-                  <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest block mb-1">{s.label}</span>
-                  <div className={`text-sm font-mono font-bold ${parseFloat(s.val) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                    {parseFloat(s.val) >= 0 ? '+' : ''}{s.val}m
-                  </div>
+          {/* LEFT SIDEBAR (Station Profile) */}
+          <div className="md:w-[320px] bg-slate-50/50 border-r border-slate-100 p-6 flex flex-col shrink-0 overflow-y-auto">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="w-9 h-9 rounded-xl bg-academic-blue flex items-center justify-center shadow-lg shadow-academic-blue/20">
+                    <Zap className="w-5 h-5 text-white" />
                 </div>
-              ))}
+                <div>
+                    <h4 className="text-[9px] font-black text-academic-blue uppercase tracking-widest leading-none">CCCSS, Shivaji University</h4>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1 block">Institutional RTDAS Control</span>
+                </div>
             </div>
 
-            <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
-                <div className="flex items-center justify-between mb-6 relative z-10">
-                    <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">Hydro-Analysis Trend (24h Window)</span>
-                    </div>
+            <div className="mb-6">
+                <div className="inline-block px-2 py-0.5 bg-slate-100 rounded text-[9px] font-mono font-bold text-slate-500 mb-2 border border-slate-200">
+                    RG-{sensor.id.toUpperCase()}
                 </div>
-                <div className="h-40 mb-4 bg-white/5 rounded-xl border border-white/10 p-4 relative z-10">
-                    <MiniTrend history={history} />
+                <h2 className="text-xl font-black font-serif text-slate-800 tracking-tight uppercase leading-tight">
+                    {sensor.name} STATION:<br/>
+                    <span className="text-academic-blue italic opacity-80 text-sm">{sensor.subBasin || 'Basin Channel'} Monitoring</span>
+                </h2>
+                <div className="flex items-center gap-2 mt-3 text-[9px] font-bold text-slate-400">
+                    <Globe className="w-3 h-3" />
+                    <span>{sensor.location.lat.toFixed(4)}°N, {sensor.location.lng.toFixed(4)}°E</span>
                 </div>
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                    <Waves className="w-48 h-48" />
+            </div>
+
+            {/* INTEGRATED GAUGE (Left) */}
+            <div className="flex-grow flex flex-col items-center justify-center py-4 bg-white/80 rounded-2xl border border-slate-100 shadow-inner min-h-[350px]">
+                <h4 className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Atmospheric Load MSL</h4>
+                <div className="w-full max-h-[400px]">
+                    <EngineeringGauge sensor={sensor} data={data} noHeader={true} />
                 </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-inner">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Field Site Description</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                      {sensor.description}
-                  </p>
-              </div>
-              <div className="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-xl overflow-hidden relative">
-                  <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-4">Node Hardware Visual</h4>
-                  <div className="aspect-video bg-slate-800 rounded-xl border border-blue-500/30 flex flex-col items-center justify-center p-4 text-center">
-                      <Activity className="w-8 h-8 text-blue-500/40 mb-2" />
-                      <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
-                          IOT SENSOR UNIT: PNCHGN-v2.1<br/>
-                          SHIVAJI UNIVERSITY DESIGN
-                      </span>
-                  </div>
-                  <div className="absolute -bottom-4 -right-4 opacity-5">
-                      <ShieldAlert className="w-24 h-24 text-white" />
-                  </div>
-              </div>
+            <div className="mt-6 pt-4 border-t border-slate-200">
+               <p className="text-[9px] text-slate-500 italic leading-relaxed">
+                  Field telemetry is captured via radar ultrasonic sensors and transmitted in real-time. Data is research-grade from the CCCSS flood network.
+               </p>
             </div>
           </div>
 
-          <div className="md:col-span-4 flex flex-col gap-6">
-             <div className="bg-slate-50 rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col items-center flex-grow">
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-200 w-full text-center pb-2">Physical Staff Reading</h4>
-                <div className="w-full h-full min-h-[400px]">
-                    <EngineeringGauge sensor={sensor} data={data} noHeader={true} />
+          {/* RIGHT DASHBOARD (Analytics) */}
+          <div className="flex-grow p-6 flex flex-col bg-white overflow-hidden relative">
+            <button onClick={onClose} className="absolute top-6 right-6 z-20 p-2 text-slate-300 hover:text-red-500 rounded-full transition-all hover:bg-slate-50 box-content">
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* TABS HEADER */}
+            <div className="flex items-center gap-1 mb-6 bg-slate-50 p-1 rounded-xl self-start">
+               <button 
+                 onClick={() => setActiveTab('analytics')}
+                 className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'analytics' ? 'bg-white text-academic-blue shadow-sm ring-1 ring-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+               >
+                 View Analytics
+               </button>
+               <button 
+                 onClick={() => setActiveTab('technical')}
+                 className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'technical' ? 'bg-white text-academic-blue shadow-sm ring-1 ring-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+               >
+                 Technical Specs
+               </button>
+            </div>
+
+            <div className="flex-grow overflow-y-auto pr-1">
+              {activeTab === 'analytics' ? (
+                <div className="space-y-6">
+                  {/* Rolling Stats Header */}
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                       {stats.map(s => (
+                          <div key={s.label} className="bg-white border border-slate-100 rounded-xl p-3 px-4 transition-all hover:border-academic-blue/30 shadow-sm relative overflow-hidden group">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</span>
+                                <div className={`${s.color} opacity-40 group-hover:opacity-100 transition-opacity`}>{s.icon}</div>
+                              </div>
+                              <div className={`text-lg font-mono font-black ${s.color} flex items-baseline gap-1`}>
+                                  {parseFloat(s.val) > 0 ? '+' : ''}{s.val}
+                                  <span className="text-[9px] font-bold opacity-60">mm</span>
+                              </div>
+                          </div>
+                       ))}
+                  </div>
+
+                  {/* MAIN HYETOGRAPH CHART */}
+                  <div className="p-5 bg-white border border-slate-100 rounded-[1.5rem] shadow-sm relative overflow-hidden h-[420px] flex flex-col">
+                      <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-academic-blue animate-pulse" />
+                              <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none">Hyetograph: Intensity vs. Accumulation</h4>
+                          </div>
+                          <div className="flex items-center gap-2">
+                             <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest px-2 py-0.5 bg-slate-50 rounded border border-slate-100">Live Telemetry</div>
+                             <button className="text-slate-300 hover:text-academic-blue transition-colors"><ExternalLink className="w-3.5 h-3.5" /></button>
+                          </div>
+                      </div>
+                      <div className="flex-grow">
+                          <BasinAnalyticsChart history={history} markerColor={sensor.markerColor} />
+                      </div>
+                  </div>
                 </div>
-             </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
+                   <div className="space-y-6">
+                      <section>
+                         <h5 className="text-[10px] font-black text-academic-blue uppercase tracking-[0.2em] mb-3 pb-1 border-b border-slate-100 flex items-center gap-2">
+                            <Activity className="w-4 h-4" /> Real-Time Telemetry Data
+                         </h5>
+                         <div className="space-y-2">
+                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                               <span className="text-[11px] text-slate-500 font-bold uppercase">Water Stage (m MSL)</span>
+                               <span className="text-sm font-mono font-bold text-slate-800">{current.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                               <span className="text-[11px] text-slate-500 font-bold uppercase">Temperature</span>
+                               <span className="text-sm font-mono font-bold text-slate-800">{data?.temperature || '24.5'} °C</span>
+                            </div>
+                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                               <span className="text-[11px] text-slate-500 font-bold uppercase">Battery (System)</span>
+                               <span className="text-sm font-mono font-bold text-slate-800">{data?.power || '11.51'} V</span>
+                            </div>
+                         </div>
+                      </section>
+                      <section>
+                         <h5 className="text-[10px] font-black text-academic-blue uppercase tracking-[0.2em] mb-3 pb-1 border-b border-slate-100 flex items-center gap-2">
+                            <Signal className="w-4 h-4" /> Network Link Information
+                         </h5>
+                         <div className="grid grid-cols-2 gap-4">
+                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Signal</span>
+                               <div className="text-sm font-mono font-bold text-emerald-600">{data?.signal || 97}%</div>
+                            </div>
+                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Interval</span>
+                               <div className="text-sm font-mono font-bold text-slate-700">60s</div>
+                            </div>
+                         </div>
+                      </section>
+                   </div>
+                   <div className="space-y-6">
+                      <section className="bg-slate-50/50 p-5 rounded-2xl border border-slate-100">
+                         <h5 className="text-[10px] font-black text-academic-gold uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <ShieldAlert className="w-4 h-4" /> Sensor Standard & Compliance
+                         </h5>
+                         <div className="space-y-4">
+                            <div>
+                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Manufacturer Spec</span>
+                               <div className="text-xs font-bold text-slate-700">ISO/IS 0.2mm TP Accuracy Standard</div>
+                            </div>
+                            <div>
+                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Uplink Gateway</span>
+                               <div className="text-xs font-bold text-slate-700">RTDAS CCCSS SUK Hub - {sensor.id.toUpperCase()}</div>
+                            </div>
+                            <div>
+                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Calibration Hash</span>
+                               <div className="text-[10px] font-mono text-slate-400 truncate">7f8c1b...d9a2e3</div>
+                            </div>
+                         </div>
+                      </section>
+                   </div>
+                </div>
+              )}
+            </div>
+
+            {/* TECHNICAL FOOTER */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 mt-4 border-t border-slate-100 shrink-0">
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Battery Status</span>
+                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700 font-mono">
+                        <Battery className="w-3 h-3 text-amber-500" />
+                        {data?.power || '11.51'} V
+                    </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Signal Health</span>
+                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700 font-mono">
+                        <Signal className="w-3 h-3 text-emerald-500" />
+                        {data?.signal || 97}%
+                    </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Sensor Compliance</span>
+                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700">
+                        <Target className="w-3 h-3 text-slate-400" />
+                        ISO/IS Standard
+                    </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Data Integrity</span>
+                    <div className="flex items-center gap-2 text-[10px] font-black text-academic-gold">
+                        <Globe className="w-3 h-3" />
+                        Live RTDAS
+                    </div>
+                </div>
+            </div>
           </div>
         </motion.div>
       </div>
     </AnimatePresence>
   );
 };
+

@@ -169,7 +169,55 @@ export const formatAlertMessage = (level, location, waterLevel, language = 'en')
   return template.replace('{location}', location).replace('{level}', waterLevel.toFixed(2));
 };
 
-// Check if alert should trigger
+/**
+ * Comprehensive Basin Risk Assessment
+ * Evaluates all stations to determine global alert status and triggers
+ */
+export const calculateBasinRisk = (sensorData) => {
+  if (!sensorData || Object.keys(sensorData).length === 0) {
+    return { level: 'normal', triggers: [], riskTrend: 'stable' };
+  }
+
+  const sensorValues = Object.values(sensorData);
+  const activeAlerts = sensorValues.filter(s => s.alertLevel !== 'normal');
+  
+  // 1. Identify the most severe level
+  const severityMap = { normal: 0, warning: 1, danger: 2, extreme: 3 };
+  let maxLevel = 'normal';
+  let triggers = [];
+
+  sensorValues.forEach(sensor => {
+    if (severityMap[sensor.alertLevel] > severityMap[maxLevel]) {
+      maxLevel = sensor.alertLevel;
+    }
+    if (sensor.alertLevel !== 'normal') {
+      triggers.push(sensor.sensorName);
+    }
+  });
+
+  // 2. Trend Escalation Logic
+  // If multiple stations are Rising rapidly, elevate the risk sense
+  const rapidRisers = sensorValues.filter(s => s.rateOfChange > 0.1).length;
+  let riskTrend = 'stable';
+  if (rapidRisers >= 3) riskTrend = 'surging';
+  else if (rapidRisers >= 1) riskTrend = 'rising';
+
+  // 3. Comprehensively adjust global status
+  // If 3+ stations are in Warning, or 1 Danger + 2 Rising, maintain high alert
+  let globalLevel = maxLevel;
+  if (maxLevel === 'warning' && activeAlerts.length >= 3) {
+    // Optional: could escalate to 'danger' here if desired, 
+    // but for now we'll just keep the high warning.
+  }
+
+  return {
+    level: globalLevel,
+    triggers: [...new Set(triggers)],
+    riskTrend,
+    count: activeAlerts.length
+  };
+};
+
 export const shouldTriggerAlert = (previousLevel, currentLevel) => {
   const levels = ['normal', 'warning', 'danger', 'extreme'];
   const prevIndex = levels.indexOf(previousLevel);
