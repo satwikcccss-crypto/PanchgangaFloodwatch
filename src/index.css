@@ -275,8 +275,20 @@ body {
   overflow: hidden;
 }
 
-.custom-map-tooltip::before {
-  display: none !important;
+.tooltip-plate {
+  padding: 12px;
+  background: white;
+  position: relative;
+}
+
+.tooltip-plate::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--su-academic-blue);
 }
 
 /* ===== UTILITIES / TEXT FORMATTING ===== */

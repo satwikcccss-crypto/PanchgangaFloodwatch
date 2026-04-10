@@ -39,7 +39,8 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
   const sensor = SENSORS.find(s => s.id === sensorId);
   if (!sensor) throw new Error(`Sensor ${sensorId} not found`);
   
-  if (sensor.channelId.startsWith('YOUR_CHANNEL')) {
+  // Strict check for unconfigured channels
+  if (!sensor.channelId || sensor.channelId.includes('YOUR_CHANNEL') || sensor.channelId === '') {
     return generateMockHistoricalData(sensor, results);
   }
   
@@ -49,6 +50,11 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
       params: { api_key: sensor.apiKey, results },
       timeout: 15000,
     });
+    
+    if (!response.data || !response.data.feeds) {
+       return generateMockHistoricalData(sensor, results);
+    }
+
     return response.data.feeds.map(feed => parseThingSpeakResponse(feed, sensor));
   } catch (error) {
     console.error(`Error fetching historical data for ${sensor.name}:`, error);

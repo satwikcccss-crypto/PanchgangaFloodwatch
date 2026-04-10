@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Activity, Target, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight, Globe, Battery, Signal, Zap } from 'lucide-react';
+import { X, ExternalLink, Activity, Target, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight, Globe, Battery, Signal, Zap, TrendingUp, TrendingDown } from 'lucide-react';
 import { getAlertConfig } from '../../config/alerts';
 import BasinAnalyticsChart from '../Charts/BasinAnalyticsChart';
 
@@ -201,11 +201,12 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
   const current = data?.waterLevel || 0;
   
   const getChange = (pts) => {
-    if (history.length < pts) return "0.0";
+    if (!history || history.length < pts) return "0.0";
     const pastEntry = history[history.length - pts];
     const pastValue = typeof pastEntry === 'object' ? pastEntry.waterLevel : pastEntry;
+    if (pastValue === undefined || pastValue === null) return "0.0";
     const diff = (current - pastValue);
-    return diff.toFixed(2);
+    return isNaN(diff) ? "0.0" : diff.toFixed(2);
   };
 
   const stats = [
@@ -241,15 +242,15 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
 
             <div className="mb-6">
                 <div className="inline-block px-2 py-0.5 bg-slate-100 rounded text-[9px] font-mono font-bold text-slate-500 mb-2 border border-slate-200">
-                    RG-{sensor.id.toUpperCase()}
+                    RG-{sensor.id.toUpperCase()} • RTDAS
                 </div>
                 <h2 className="text-xl font-black font-serif text-slate-800 tracking-tight uppercase leading-tight">
                     {sensor.name} STATION:<br/>
-                    <span className="text-academic-blue italic opacity-80 text-sm">{sensor.subBasin || 'Basin Channel'} Monitoring</span>
+                    <span className="text-academic-gold italic opacity-80 text-sm">{sensor.river} Monitoring</span>
                 </h2>
                 <div className="flex items-center gap-2 mt-3 text-[9px] font-bold text-slate-400">
                     <Globe className="w-3 h-3" />
-                    <span>{sensor.location.lat.toFixed(4)}°N, {sensor.location.lng.toFixed(4)}°E</span>
+                    <span>STN COORDS: {sensor.location.lat.toFixed(4)}°N, {sensor.location.lng.toFixed(4)}°E</span>
                 </div>
             </div>
 

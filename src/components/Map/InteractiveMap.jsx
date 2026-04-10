@@ -71,17 +71,33 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
             >
               <Tooltip 
                 direction="top" 
-                offset={[0, -15]} 
+                offset={[0, -20]} 
                 opacity={1} 
                 className="custom-map-tooltip"
               >
-                <div className="px-3 py-1.5 flex flex-col gap-0.5">
-                  <span className="text-[10px] font-black text-slate-800 uppercase tracking-tighter leading-none">
-                    {sensor.name}
-                  </span>
-                  <span className="text-[8px] font-bold text-slate-400 tracking-widest uppercase">
-                    RG-{sensor.id.toUpperCase()} • {alertLevel}
-                  </span>
+                <div className="tooltip-plate min-w-[140px]">
+                  <div className="flex justify-between items-start mb-1.5">
+                    <div className="flex-1">
+                      <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-tighter leading-tight">
+                        {sensor.name}
+                      </h4>
+                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{sensor.river}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-baseline gap-1 mt-1">
+                    <span className="text-lg font-black text-slate-800 tabular-nums">
+                      {data?.waterLevel?.toFixed(2) || '--'}
+                    </span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">m MSL</span>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100">
+                    <span className={`text-[8px] font-black uppercase tracking-widest ${alertConfig.color === '#10b981' ? 'text-emerald-500' : 'text-amber-500'}`}>
+                       {data?.rateOfChange > 0 ? 'RISING' : 'STABLE'}
+                    </span>
+                    <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: alertConfig.color }} />
+                  </div>
                 </div>
               </Tooltip>
             </Marker>
