@@ -24,9 +24,11 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
-  /* Subtle academic grid background */
-  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-  background-size: 24px 24px;
+  /* Subtle academic grid background matching Rainwatch */
+  background-image:
+    linear-gradient(var(--panel-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--panel-border) 1px, transparent 1px);
+  background-size: 40px 40px;
   background-attachment: fixed;
 }
 
@@ -47,8 +49,8 @@ body {
 .academic-panel {
   background-color: #ffffff;
   border: 1px solid var(--panel-border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border-radius: 8px;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -57,58 +59,13 @@ body {
   border-color: #cbd5e1;
 }
 
-/* ─── Dashboard Split Layout ────────────────────────────────────────── */
-.dashboard-split-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 15px 0 rgba(31, 38, 135, 0.05);
 }
 
-.map-viewport {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  background: #f8fafc;
-  border-right: 1px solid #e2e8f0;
-}
-
-.info-viewport {
-  height: 100vh;
-  overflow-y: auto;
-  background: white;
-  position: relative;
-}
-
-/* Scrollbar styling for info-viewport */
-.info-viewport::-webkit-scrollbar {
-  width: 6px;
-}
-.info-viewport::-webkit-scrollbar-track {
-  background: transparent;
-}
-.info-viewport::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-.info-viewport::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
-}
-
-/* Responsive Overrides */
-@media (max-width: 1200px) {
-  .dashboard-split-container {
-    grid-template-columns: 40% 60%;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-split-container {
-    display: flex;
     flex-direction: column;
     position: relative;
     height: auto;

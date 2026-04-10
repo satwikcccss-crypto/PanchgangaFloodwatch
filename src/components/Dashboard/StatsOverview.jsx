@@ -21,99 +21,58 @@ const StatCard = ({ sensor, data, index, onClick }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
-      whileHover={{ y: -3, transition: { duration: 0.2 } }}
-      onClick={() => onClick && onClick(sensor.id)}
-      className="bg-white rounded-xl p-4 border shadow-sm transition-all duration-300 cursor-pointer group relative overflow-hidden"
-      style={{ borderColor: `${alertConfig.color}20` }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      onClick={() => onClick?.(sensor.id)}
+      className="bg-white rounded-lg p-5 border shadow-sm cursor-pointer transition-all relative overflow-hidden flex flex-col justify-between h-[160px] border-slate-200 hover:shadow-md"
     >
-      {/* Top glow bar */}
+      {/* Floodwatch Left Accent Bar */}
       <div 
-        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-full"
-        style={{ background: `linear-gradient(90deg, transparent, ${alertConfig.color}, transparent)` }}
+        className="absolute left-0 top-0 bottom-0 w-1.5" 
+        style={{ backgroundColor: isActive ? alertConfig.color : '#94a3b8' }}
       />
-      
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <div 
-            className="status-dot flex-shrink-0"
-            style={{ backgroundColor: isActive ? alertConfig.color : '#475569' }}
-          />
-          <div className="min-w-0">
-            <h3 className="text-sm font-bold text-academic-blue truncate leading-tight">
-              {sensor.name}
-            </h3>
-            <p className="text-[10px] text-slate-500 font-medium truncate">{sensor.sensorType}</p>
-          </div>
+
+      {/* Top Header */}
+      <div className="flex justify-between items-start">
+        <div className="flex-1">
+          <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] leading-tight mb-1">
+            {sensor.name.toUpperCase()}
+          </h4>
+          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{sensor.river}</p>
         </div>
-        <span 
-          className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex-shrink-0"
-          style={{ 
-            backgroundColor: alertConfig.bgColor, 
-            color: alertConfig.color,
-            border: `1px solid ${alertConfig.color}30`
-          }}
-        >
-          {alertConfig.label}
-        </span>
       </div>
 
-      {/* Water Level Display */}
-      <div className="flex items-end justify-between mb-3">
-        <div>
-          <div className="flex items-baseline gap-1">
-            <span className="stat-number text-2xl font-black text-slate-800">
-              {waterLevel !== null && waterLevel !== undefined ? waterLevel.toFixed(2) : '--'}
-            </span>
-            <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">m MSL</span>
-          </div>
-          <div className="flex items-center gap-1 mt-1">
-            {getTrendIcon()}
-            <span className="text-[10px] text-slate-500">
-              {pctOfWarning > 0 ? `${pctOfWarning.toFixed(0)}% of warning` : 'No data'}
-            </span>
-          </div>
+      {/* Main Reading */}
+      <div className="flex flex-col mt-2">
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-3xl font-black text-slate-800 tracking-tighter tabular-nums">
+            {waterLevel !== null && waterLevel !== undefined ? waterLevel.toFixed(2) : '--'}
+          </span>
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">m MSL</span>
         </div>
         
-        {/* Mini Gauge */}
-        <div className="relative w-12 h-12">
-          <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="14" fill="none" stroke="#1e293b" strokeWidth="3" />
-            <circle 
-              cx="18" cy="18" r="14" fill="none" 
-              stroke={alertConfig.color}
-              strokeWidth="3"
-              strokeDasharray={`${Math.min(100, pctOfWarning) * 0.88} 88`}
-              strokeLinecap="round"
-              className="transition-all duration-1000 ease-out"
-            />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Droplets className="w-3.5 h-3.5" style={{ color: alertConfig.color }} />
-          </div>
+        {/* Trend Indicator */}
+        <div className="flex items-center gap-1.5 mt-1">
+          <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-emerald-500' : 'text-slate-400'}`}>
+            {isActive ? (pctOfWarning > 90 ? 'RISING' : pctOfWarning < 50 ? 'FALLING' : 'STABLE') : 'OFFLINE'}
+          </span>
+          {isActive && (pctOfWarning > 90 ? <TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> : <TrendingDown className="w-3.5 h-3.5 text-slate-400" />)}
         </div>
       </div>
 
-      {/* Footer: Thresholds */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10px] font-bold text-slate-400">
-        <span>W: {sensor.dangerLevels.warning}m</span>
-        <span>D: {sensor.dangerLevels.danger}m</span>
-        <span>HFL: {sensor.dangerLevels.hfl}m</span>
-      </div>
-
-      {/* Timestamp */}
-      {data?.timestamp && (
-        <div className="text-[10px] text-slate-600 mt-1.5 font-mono">
-          {new Date(data.timestamp).toLocaleTimeString('en-IN', {
-            hour: '2-digit', minute: '2-digit',
-            timeZone: 'Asia/Kolkata'
-          })}
-          {data.isMockData && <span className="ml-1 text-amber-600">(demo)</span>}
+      {/* Reference Footer */}
+      <div className="flex justify-between items-end mt-4">
+        <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">
+           IST REF
         </div>
-      )}
+        <div 
+          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-slate-100 bg-slate-50" 
+          style={{ color: alertConfig.color }}
+        >
+           {alertConfig.label}
+        </div>
+      </div>
     </motion.div>
   );
 };
