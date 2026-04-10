@@ -65,26 +65,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 8px 15px 0 rgba(31, 38, 135, 0.05);
 }
-
-    flex-direction: column;
-    position: relative;
-    height: auto;
-    overflow-y: visible;
-  }
-
-  .map-viewport {
-    height: 50vh;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-
-  .info-viewport {
-    height: auto;
-    overflow-y: visible;
-  }
-}
-
+/* ─── Dashboard Modern Layout ────────────────────────────────────────── */
 .auth-button {
   @apply px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-200 rounded border;
   background-color: #ffffff;
