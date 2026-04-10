@@ -15,8 +15,8 @@
 export const SENSORS = [
   {
     id: 'shivaji_bridge',
-    name: 'Wadange Bridge (CSM Bridge)',
-    shortName: 'Wadange',
+    name: 'Chhatrapati Shivaji Maharaj (CSM) Bridge',
+    shortName: 'CSM Bridge',
     channelId: '2505527',
     apiKey: 'GIPQ7GZ7IPG1I0GE',
     sensorType: 'Ultrasonic Radar — RTDAS',

@@ -47,10 +47,22 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
         zoomControl={false}
         className="h-full w-full z-10 grayscale-[0.2] contrast-[1.1]"
       >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        />
+        <LayersControl position="topright">
+          {Object.entries(MAP_CONFIG.mapLayers).map(([key, layer], index) => (
+            <BaseLayer 
+              key={key} 
+              checked={index === 0} 
+              name={layer.name}
+            >
+              <TileLayer
+                url={layer.url}
+                attribution={layer.attribution}
+                subdomains={layer.subdomains || ['a', 'b', 'c']}
+                maxZoom={18}
+              />
+            </BaseLayer>
+          ))}
+        </LayersControl>
 
         <FlyToSensor selectedSensorId={selectedSensor} />
 
@@ -81,7 +93,7 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
                       <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-tighter leading-tight">
                         {sensor.name}
                       </h4>
-                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{sensor.river}</p>
+                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">RWS-{sensor.id.toUpperCase()} • {sensor.river}</p>
                     </div>
                   </div>
                   

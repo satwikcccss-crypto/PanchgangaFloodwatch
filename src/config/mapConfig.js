@@ -14,23 +14,39 @@ export const MAP_CONFIG = {
     [16.85, 74.60]
   ],
   
-  tileLayer: {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-    alternatives: {
-      satellite: {
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        attribution: 'Tiles &copy; Esri'
-      },
-      terrain: {
-        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-        attribution: 'Map data: &copy; OpenTopoMap contributors'
-      },
-      dark: {
-        url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-        attribution: '&copy; <a href="https://carto.com/">CartoDB</a>'
-      }
+  mapLayers: {
+    osm: {
+      name: 'OpenStreetMap (Standard)',
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    },
+    esriSatellite: {
+      name: 'ESRI World Imagery (Satellite)',
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community'
+    },
+    esriTopo: {
+      name: 'ESRI World Topographic',
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    },
+    googleHybrid: {
+      name: 'Google Maps Hybrid',
+      url: 'https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+      attribution: '&copy; Google Maps',
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    },
+    googleSatellite: {
+      name: 'Google Maps Satellite',
+      url: 'https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+      attribution: '&copy; Google Maps',
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    },
+    googleTerrain: {
+      name: 'Google Maps Terrain',
+      url: 'https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+      attribution: '&copy; Google Maps',
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     }
   },
   

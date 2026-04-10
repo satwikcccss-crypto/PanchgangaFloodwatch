@@ -242,7 +242,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
 
             <div className="mb-6">
                 <div className="inline-block px-2 py-0.5 bg-slate-100 rounded text-[9px] font-mono font-bold text-slate-500 mb-2 border border-slate-200">
-                    RG-{sensor.id.toUpperCase()} • RTDAS
+                    RWS-{sensor.id.toUpperCase()} • RTDAS
                 </div>
                 <h2 className="text-xl font-black font-serif text-slate-800 tracking-tight uppercase leading-tight">
                     {sensor.name} STATION:<br/>
@@ -323,7 +323,11 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                           </div>
                       </div>
                       <div className="flex-grow">
-                          <BasinAnalyticsChart history={history} markerColor={sensor.markerColor} />
+                          <BasinAnalyticsChart 
+                            history={history} 
+                            markerColor={sensor.markerColor}
+                            dangerLevels={sensor.dangerLevels}
+                          />
                       </div>
                   </div>
                 </div>

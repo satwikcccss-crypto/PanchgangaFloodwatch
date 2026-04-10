@@ -14,7 +14,7 @@ ChartJS.register(
   Filler
 );
 
-const BasinAnalyticsChart = ({ history, markerColor = '#0ea5e9' }) => {
+const BasinAnalyticsChart = ({ history, dangerLevels, markerColor = '#0f4c81' }) => {
   const chartData = useMemo(() => {
     if (!history || history.length < 2) return { labels: [], datasets: [] };
 
@@ -38,7 +38,6 @@ const BasinAnalyticsChart = ({ history, markerColor = '#0ea5e9' }) => {
       labels,
       datasets: [
         {
-          type: 'line',
           label: 'Stage (m MSL)',
           data: waterLevels,
           borderColor: markerColor,
@@ -46,24 +45,34 @@ const BasinAnalyticsChart = ({ history, markerColor = '#0ea5e9' }) => {
           borderWidth: 2,
           pointRadius: 0,
           fill: true,
-          yAxisID: 'y',
           tension: 0.4
         },
         {
-          type: 'bar',
-          label: 'Change Rate (m/hr)',
-          data: rateOfChange,
-          backgroundColor: (context) => {
-            const val = context.raw;
-            return val >= 0 ? '#10b98140' : '#ef444440';
-          },
-          borderColor: (context) => {
-            const val = context.raw;
-            return val >= 0 ? '#10b981' : '#ef4444';
-          },
+          label: 'Warning',
+          data: Array(labels.length).fill(dangerLevels?.warning),
+          borderColor: '#eab308',
           borderWidth: 1,
-          barThickness: 4,
-          yAxisID: 'y1',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'Danger',
+          data: Array(labels.length).fill(dangerLevels?.danger),
+          borderColor: '#f97316',
+          borderWidth: 1.5,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'Extreme',
+          data: Array(labels.length).fill(dangerLevels?.extreme),
+          borderColor: '#ef4444',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+          fill: false,
         }
       ]
     };
@@ -119,24 +128,11 @@ const BasinAnalyticsChart = ({ history, markerColor = '#0ea5e9' }) => {
         position: 'left',
         grid: { color: '#f1f5f9' },
         ticks: { color: '#64748b', font: { size: 9, family: 'JetBrains Mono' } }
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        grid: { drawOnChartArea: false },
-        ticks: { color: '#94a3b8', font: { size: 9, family: 'JetBrains Mono' } },
-        title: {
-          display: true,
-          text: 'Rate of Change (m/hr)',
-          color: '#94a3b8',
-          font: { size: 9, weight: '700' }
-        }
       }
     }
   };
 
-  return <Chart type="bar" data={chartData} options={options} />;
+  return <Chart type="line" data={chartData} options={options} />;
 };
 
 export default BasinAnalyticsChart;
