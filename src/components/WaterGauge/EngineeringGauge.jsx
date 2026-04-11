@@ -7,43 +7,86 @@ import BasinAnalyticsChart from '../Charts/BasinAnalyticsChart';
 export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) => {
   const level = data?.waterLevel || 0;
   const alertConfig = getAlertConfig(data?.alertLevel || 'normal');
-  
-  // Calculate vertical mapping with a tightly bounded operational range
-  const rawBase = sensor.dangerLevels.warning - 2;
-  const rawTop = sensor.dangerLevels.hfl + 2;
-  
-  // Floor to nearest 0.2m
-  const baseMsl = Math.floor(rawBase * 5) / 5;
-  const topMsl = Math.ceil(rawTop * 5) / 5;
-  const range = topMsl - baseMsl;
-  
-  const getTopPosition = (val) => {
-    let p = ((val - baseMsl) / range) * 100;
-    return Math.max(0, Math.min(100, p));
-  };
-  
-  const fillPercentage = getTopPosition(level);
+  const color = alertConfig.color;
 
-  // Thresholds for glowing effects
-  const isAlertActive = level >= sensor.dangerLevels.warning;
-  const isDangerActive = level >= sensor.dangerLevels.danger;
+  const H = 400, W = 204, TX = 62, TW = 78, PADT = 30, PADB = 22;
+  const TR = TX + TW, UH = H - PADT - PADB, ZM = 2.4;
 
-  // Generate structural increments: 0.1m for ticks, 0.5m for labels
-  const ticks = [];
-  for (let i = baseMsl; i <= topMsl + 0.01; i += 0.1) {
-    ticks.push(Number(i.toFixed(1)));
+  const lo = level - ZM;
+  const hi = level + ZM;
+
+  const eY = (e) => PADT + UH * (1 - (e - lo) / (hi - lo));
+  const wY = eY(level);
+  const wH = H - PADB - wY;
+
+  const wnY = sensor.dangerLevels.warning <= hi && sensor.dangerLevels.warning >= lo ? eY(sensor.dangerLevels.warning) : null;
+  const dnY = sensor.dangerLevels.danger <= hi && sensor.dangerLevels.danger >= lo ? eY(sensor.dangerLevels.danger) : null;
+  
+  const bands = [];
+  let b = Math.floor(lo * 2) / 2;
+  while (b < hi + 0.01) {
+    const y1 = eY(b + 0.5);
+    const y2 = eY(b);
+    const yTop = Math.max(PADT, Math.min(y1, y2));
+    const yBot = Math.min(H - PADB, Math.max(y1, y2));
+    if (yBot > yTop) {
+      const i = Math.round(b * 2);
+      if (i % 2 === 0) {
+        bands.push(<rect key={b} x={TX} y={yTop.toFixed(1)} width={TW} height={(yBot - yTop).toFixed(1)} fill="rgba(0,0,0,0.03)" />);
+      }
+    }
+    b = Math.round((b + 0.5) * 100) / 100;
   }
+
+  const tks = [];
+  let e = Math.ceil(lo * 10) / 10;
+  while (e <= hi + 0.001) {
+    const r = Math.round(e * 100) / 100;
+    const y = eY(r);
+    const fp = Math.abs(r - Math.round(r));
+    const maj = fp < 0.005, mid = !maj && Math.abs(fp - 0.5) < 0.005;
+    const tl = maj ? 13 : mid ? 8 : 3.5;
+    const sw = maj ? 0.95 : mid ? 0.6 : 0.28;
+    const sc = maj ? '#475569' : mid ? '#64748b' : '#94a3b8';
+
+    tks.push(<line key={`l1_${r}`} x1={TX - tl} y1={y.toFixed(1)} x2={TX} y2={y.toFixed(1)} stroke={sc} strokeWidth={sw} />);
+    tks.push(<line key={`l2_${r}`} x1={TR} y1={y.toFixed(1)} x2={TR + tl} y2={y.toFixed(1)} stroke={sc} strokeWidth={sw} />);
+
+    if (maj) {
+      tks.push(<text key={`t1_${r}`} x={TX - 17} y={(y + 3.5).toFixed(1)} textAnchor="end" fontSize="8.5" fontFamily="'JetBrains Mono', monospace" fill="#475569" fontWeight="bold">{Math.round(r)}</text>);
+      tks.push(<line key={`l3_${r}`} x1={TX} y1={y.toFixed(1)} x2={TR} y2={y.toFixed(1)} stroke="rgba(0,0,0,0.05)" strokeWidth=".5" />);
+    } else if (mid) {
+      tks.push(<text key={`t2_${r}`} x={TX - 17} y={(y + 3).toFixed(1)} textAnchor="end" fontSize="7" fontFamily="'JetBrains Mono', monospace" fill="#64748b">.5</text>);
+      tks.push(<line key={`l4_${r}`} x1={TX} y1={y.toFixed(1)} x2={TR} y2={y.toFixed(1)} stroke="rgba(0,0,0,0.05)" strokeWidth=".35" strokeDasharray="2,5" />);
+    }
+    e = Math.round((e + 0.1) * 100) / 100;
+  }
+
+  let wp = `M${TX - 240},${wY.toFixed(1)}`;
+  for (let i = 0; i < 24; i++) wp += ` q20,${i % 2 === 0 ? -2.1 : 2.1} 40,0`;
+  wp += ` V${H - PADB} H${TX - 240} Z`;
+
+  const calcZoneHeight = (yBottom, yTop) => {
+    const bottom = Math.min(Math.max(yBottom, PADT), H - PADB);
+    const top = Math.min(Math.max(yTop, PADT), H - PADB);
+    return { y: top, height: Math.max(0, bottom - top) };
+  };
+
+  const normZone = calcZoneHeight(H - PADB, eY(sensor.dangerLevels.warning));
+  const warnZone = calcZoneHeight(eY(sensor.dangerLevels.warning), eY(sensor.dangerLevels.danger));
+  const dangZone = calcZoneHeight(eY(sensor.dangerLevels.danger), PADT);
+  const bY = Math.max(PADT + 18, Math.min(H - PADB - 6, wY));
 
   return (
     <div 
-      className={`academic-panel p-4 relative cursor-pointer group hover:border-academic-blue transition-all h-full flex flex-col ${noHeader ? 'border-none shadow-none bg-transparent' : ''}`}
+      className={`academic-panel relative cursor-pointer group hover:border-academic-blue transition-all h-full flex flex-col ${noHeader ? 'border-none shadow-none bg-transparent' : 'p-4'}`}
       onClick={onClick}
     >
       {!noHeader && (
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div>
             <h4 className="text-xs font-bold font-serif text-academic-blue tracking-wider leading-tight">{sensor.name}</h4>
-            <span className="text-[9px] font-bold text-slate-400 font-mono">PNCHGN-RTDAS-{sensor.id.toUpperCase()}</span>
+            <span className="text-[9px] font-bold text-slate-400 font-mono">PNCHGN-RTDAS-RWL-{sensor.id.toUpperCase()}</span>
           </div>
           <div className="text-right">
             <div className="text-base font-black font-mono tracking-tighter" style={{ color: alertConfig.color }}>
@@ -56,73 +99,64 @@ export const EngineeringGauge = ({ sensor, data, onClick, noHeader = false }) =>
         </div>
       )}
 
-      <div className="relative mt-2 flex-grow min-h-[180px]">
-        <div className="survey-staff-container h-full max-h-[350px]">
-          <div className="relative h-full w-20 mx-auto">
-            {/* Scale labels on the LEFT */}
-            <div className="absolute right-full top-0 bottom-0 w-10 z-10 pointer-events-none pr-2">
-                {ticks.filter(t => (t * 10) % 5 === 0).map(tick => (
-                  <div 
-                    key={tick}
-                    className="absolute right-0 text-[10px] font-mono font-bold text-slate-500"
-                    style={{ bottom: `${getTopPosition(tick)}%`, transform: 'translateY(50%)' }}
-                  >
-                    {tick.toFixed(1)}
-                  </div>
-                ))}
-            </div>
+      <div className="relative flex-grow min-h-[300px] w-full flex justify-center items-center">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ display: 'block', overflow: 'visible', maxHeight: '100%' }}>
+          <defs>
+            <clipPath id="cpTube"><rect x={TX} y={PADT} width={TW} height={UH} /></clipPath>
+            <linearGradient id="wgTube" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity=".7" />
+              <stop offset="100%" stopColor={color} stopOpacity=".3" />
+            </linearGradient>
+            <linearGradient id="znNormal" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#22c55e" stopOpacity=".15"/><stop offset="100%" stopColor="#86efac" stopOpacity=".05"/></linearGradient>
+            <linearGradient id="znAlert" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#eab308" stopOpacity=".15"/><stop offset="100%" stopColor="#fde047" stopOpacity=".05"/></linearGradient>
+            <linearGradient id="znDanger" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ef4444" stopOpacity=".15"/><stop offset="100%" stopColor="#f87171" stopOpacity=".05"/></linearGradient>
+          </defs>
 
-            <div className="survey-staff h-full">
-            
-            {/* Background Color Zones */}
-            <div className="zone-normal" style={{ height: `${getTopPosition(sensor.dangerLevels.warning)}%` }} />
-            <div 
-              className="zone-alert" 
-              style={{ 
-                bottom: `${getTopPosition(sensor.dangerLevels.warning)}%`, 
-                height: `${getTopPosition(sensor.dangerLevels.danger) - getTopPosition(sensor.dangerLevels.warning)}%` 
-              }} 
-            />
-            <div 
-              className="zone-danger" 
-              style={{ 
-                bottom: `${getTopPosition(sensor.dangerLevels.danger)}%`, 
-                height: `${100 - getTopPosition(sensor.dangerLevels.danger)}%` 
-              }} 
-            />
+          <text x={TX + TW / 2} y={PADT - 17} textAnchor="middle" fontSize="6.5" fontFamily="'JetBrains Mono', monospace" fill="#64748b" letterSpacing=".14em" fontWeight="bold">ELV · m MSL</text>
+          <text x={TX + TW / 2} y={PADT - 5} textAnchor="middle" fontSize="6" fontFamily="'JetBrains Mono', monospace" fill="#94a3b8">▲{hi.toFixed(1)}</text>
 
-            {/* Scale Tick Marks (Inside) */}
-            <div className="absolute inset-0 z-10 w-full pointer-events-none">
-              {ticks.map((tick) => {
-                const isMajor = (tick * 10) % 5 === 0;
-                const pos = getTopPosition(tick);
-                return (
-                  <div 
-                    key={tick}
-                    className={`absolute left-0 border-slate-300/40 ${isMajor ? 'w-full border-b-[1.5px]' : 'w-4 border-b'}`}
-                    style={{ bottom: `${pos}%` }}
-                  />
-                );
-              })}
-            </div>
+          <g clipPath="url(#cpTube)">
+            <rect x={TX} y={PADT} width={TW} height={UH} fill="#f8fafc" />
+            <rect x={TX} y={normZone.y} width={TW} height={normZone.height} fill="url(#znNormal)" />
+            <rect x={TX} y={warnZone.y} width={TW} height={warnZone.height} fill="url(#znAlert)" />
+            <rect x={TX} y={dangZone.y} width={TW} height={dangZone.height} fill="url(#znDanger)" />
+            {bands}
+          </g>
 
-            {/* dynamic water fill */}
-            <div className="survey-water" style={{ height: `${fillPercentage}%` }}>
-                <div className="wave"></div>
-                <div className="wave wave2"></div>
-            </div>
+          {tks}
 
-            {/* Glowing Threshold Marks */}
-            <div className={`alert-mark ${isAlertActive ? 'glow-alert' : ''}`} style={{ bottom: `${getTopPosition(sensor.dangerLevels.warning)}%` }} />
-            <div className={`danger-mark ${isDangerActive ? 'glow-danger' : ''}`} style={{ bottom: `${getTopPosition(sensor.dangerLevels.danger)}%` }} />
+          <g clipPath="url(#cpTube)">
+            <rect x={TX} y={wY.toFixed(1)} width={TW} height={wH.toFixed(1)} fill="url(#wgTube)" />
+            <path className="svg-water-wave" d={wp} fill={color} opacity=".5" />
+          </g>
 
-            {/* Floating Level Pill */}
-            <div className="level-pill" style={{ bottom: `${fillPercentage}%` }}>
-              {level.toFixed(2)}m
-            </div>
-          </div>
-          </div>
-        </div>
+          {wnY !== null && (
+            <g>
+              <line x1={TX} y1={wnY.toFixed(1)} x2={TR} y2={wnY.toFixed(1)} stroke="#eab308" strokeWidth="1.5" strokeDasharray="6,3" />
+              <line x1={TR} y1={wnY.toFixed(1)} x2={TR + 15} y2={wnY.toFixed(1)} stroke="#eab308" strokeWidth="1.5" strokeDasharray="6,3" />
+              <text x={TR + 3} y={(wnY + 3.5).toFixed(1)} fontSize="6.5" fontFamily="'JetBrains Mono', monospace" fill="#eab308" fontWeight="bold" letterSpacing=".08em">WRN</text>
+            </g>
+          )}
+          {dnY !== null && (
+            <g>
+              <line x1={TX} y1={dnY.toFixed(1)} x2={TR} y2={dnY.toFixed(1)} stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,2" />
+              <line x1={TR} y1={dnY.toFixed(1)} x2={TR + 15} y2={dnY.toFixed(1)} stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,2" />
+              <text x={TR + 3} y={(dnY + 3.5).toFixed(1)} fontSize="6.5" fontFamily="'JetBrains Mono', monospace" fill="#ef4444" fontWeight="bold" letterSpacing=".08em">DNG</text>
+            </g>
+          )}
+
+          <rect x={TX} y={PADT} width="3" height={UH} fill="#fff" opacity=".3" clipPath="url(#cpTube)" />
+          <rect x={TX} y={PADT} width={TW} height={UH} fill="none" stroke="#cbd5e1" strokeWidth="1.5" rx="1" />
+
+          <rect x={TX + 2} y={(bY - 17).toFixed(1)} width="62" height="18" rx="2" fill="#ffffff" stroke={color} strokeWidth="1.5" />
+          <text x={TX + 33} y={(bY - 4.5).toFixed(1)} textAnchor="middle" fontSize="9.5" fontFamily="'JetBrains Mono', monospace" fontWeight="bold" fill={color} letterSpacing=".05em">{level.toFixed(2)} m</text>
+
+          <line x1={TX} y1={wY.toFixed(1)} x2={TR} y2={wY.toFixed(1)} stroke="rgba(255,255,255,.5)" strokeWidth="1.5" clipPath="url(#cpTube)" />
+          <polygon points={`${TX - 3},${wY.toFixed(1)} ${TX - 14},${(wY - 5.5).toFixed(1)} ${TX - 14},${(wY + 5.5).toFixed(1)}`} fill={color} />
+          <polygon points={`${TR + 3},${wY.toFixed(1)} ${TR + 14},${(wY - 5.5).toFixed(1)} ${TR + 14},${(wY + 5.5).toFixed(1)}`} fill={color} />
+
+          <text x={TX + TW / 2} y={H - 4} textAnchor="middle" fontSize="6" fontFamily="'JetBrains Mono', monospace" fill="#94a3b8">▼{lo.toFixed(1)}</text>
+        </svg>
       </div>
     </div>
   );
@@ -196,7 +230,6 @@ const MiniTrend = ({ history }) => {
 };
 
 export const ZoomedGauge = ({ sensor, data, onClose }) => {
-  const [activeTab, setActiveTab] = useState('analytics');
   const history = data?.history || [];
   const current = data?.waterLevel || 0;
   
@@ -242,7 +275,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
 
             <div className="mb-6">
                 <div className="inline-block px-2 py-0.5 bg-slate-100 rounded text-[9px] font-mono font-bold text-slate-500 mb-2 border border-slate-200">
-                    RWS-{sensor.id.toUpperCase()} • RTDAS
+                    RWL-{sensor.id.toUpperCase()} • RTDAS
                 </div>
                 <h2 className="text-xl font-black font-serif text-slate-800 tracking-tight uppercase leading-tight">
                     {sensor.name} STATION:<br/>
@@ -275,24 +308,14 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
               <X className="w-6 h-6" />
             </button>
 
-            {/* TABS HEADER */}
+            {/* ANALYTICS HEADER */}
             <div className="flex items-center gap-1 mb-6 bg-slate-50 p-1 rounded-xl self-start">
-               <button 
-                 onClick={() => setActiveTab('analytics')}
-                 className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'analytics' ? 'bg-white text-academic-blue shadow-sm ring-1 ring-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
-               >
+               <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-white text-academic-blue shadow-sm ring-1 ring-slate-100">
                  View Analytics
-               </button>
-               <button 
-                 onClick={() => setActiveTab('technical')}
-                 className={`px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${activeTab === 'technical' ? 'bg-white text-academic-blue shadow-sm ring-1 ring-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
-               >
-                 Technical Specs
-               </button>
+               </div>
             </div>
 
             <div className="flex-grow overflow-y-auto pr-1">
-              {activeTab === 'analytics' ? (
                 <div className="space-y-6">
                   {/* Rolling Stats Header */}
                   <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
@@ -304,7 +327,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                               </div>
                               <div className={`text-lg font-mono font-black ${s.color} flex items-baseline gap-1`}>
                                   {parseFloat(s.val) > 0 ? '+' : ''}{s.val}
-                                  <span className="text-[9px] font-bold opacity-60">mm</span>
+                                  <span className="text-[9px] font-bold opacity-60">m</span>
                               </div>
                           </div>
                        ))}
@@ -315,7 +338,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                       <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full bg-academic-blue animate-pulse" />
-                              <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none">Hyetograph: Intensity vs. Accumulation</h4>
+                              <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none">WSL Water Surface Elevation</h4>
                           </div>
                           <div className="flex items-center gap-2">
                              <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest px-2 py-0.5 bg-slate-50 rounded border border-slate-100">Live Telemetry</div>
@@ -331,67 +354,6 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                       </div>
                   </div>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
-                   <div className="space-y-6">
-                      <section>
-                         <h5 className="text-[10px] font-black text-academic-blue uppercase tracking-[0.2em] mb-3 pb-1 border-b border-slate-100 flex items-center gap-2">
-                            <Activity className="w-4 h-4" /> Real-Time Telemetry Data
-                         </h5>
-                         <div className="space-y-2">
-                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                               <span className="text-[11px] text-slate-500 font-bold uppercase">Water Stage (m MSL)</span>
-                               <span className="text-sm font-mono font-bold text-slate-800">{current.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                               <span className="text-[11px] text-slate-500 font-bold uppercase">Temperature</span>
-                               <span className="text-sm font-mono font-bold text-slate-800">{data?.temperature || '24.5'} °C</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                               <span className="text-[11px] text-slate-500 font-bold uppercase">Battery (System)</span>
-                               <span className="text-sm font-mono font-bold text-slate-800">{data?.power || '11.51'} V</span>
-                            </div>
-                         </div>
-                      </section>
-                      <section>
-                         <h5 className="text-[10px] font-black text-academic-blue uppercase tracking-[0.2em] mb-3 pb-1 border-b border-slate-100 flex items-center gap-2">
-                            <Signal className="w-4 h-4" /> Network Link Information
-                         </h5>
-                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Signal</span>
-                               <div className="text-sm font-mono font-bold text-emerald-600">{data?.signal || 97}%</div>
-                            </div>
-                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Interval</span>
-                               <div className="text-sm font-mono font-bold text-slate-700">60s</div>
-                            </div>
-                         </div>
-                      </section>
-                   </div>
-                   <div className="space-y-6">
-                      <section className="bg-slate-50/50 p-5 rounded-2xl border border-slate-100">
-                         <h5 className="text-[10px] font-black text-academic-gold uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-                            <ShieldAlert className="w-4 h-4" /> Sensor Standard & Compliance
-                         </h5>
-                         <div className="space-y-4">
-                            <div>
-                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Manufacturer Spec</span>
-                               <div className="text-xs font-bold text-slate-700">ISO/IS 0.2mm TP Accuracy Standard</div>
-                            </div>
-                            <div>
-                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Uplink Gateway</span>
-                               <div className="text-xs font-bold text-slate-700">RTDAS CCCSS SUK Hub - {sensor.id.toUpperCase()}</div>
-                            </div>
-                            <div>
-                               <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1">Calibration Hash</span>
-                               <div className="text-[10px] font-mono text-slate-400 truncate">7f8c1b...d9a2e3</div>
-                            </div>
-                         </div>
-                      </section>
-                   </div>
-                </div>
-              )}
             </div>
 
             {/* TECHNICAL FOOTER */}

@@ -6,7 +6,6 @@ import {
   Radio, Clock
 } from 'lucide-react';
 import HeaderBar from './HeaderBar';
-import StatsOverview from './StatsOverview';
 import InteractiveMap from '../Map/InteractiveMap';
 import { EngineeringGauge, ZoomedGauge, SimpleIndicator } from '../WaterGauge/EngineeringGauge';
 import LiveDataChart from '../Charts/LiveDataChart';
@@ -59,14 +58,6 @@ const MainDashboard = ({ onNavigate }) => {
 
           <div className="mt-4 space-y-6">
             <AlertBanner alertLevel={basinRisk.level} triggers={basinRisk.triggers} />
-            
-            <StatsOverview 
-              sensorData={sensorData} 
-              onSensorClick={(id) => {
-                setSelectedSensorId(id);
-                setDetailedSensor(SENSORS.find(s => s.id === id));
-              }} 
-            />
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               {/* Left Column: Map & Chart */}

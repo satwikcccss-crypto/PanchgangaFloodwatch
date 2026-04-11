@@ -146,6 +146,11 @@ body {
   100% { transform: translateX(-33.33%); } 
 }
 
+@keyframes wv {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-240px); }
+}
+
 /* Glowing Thresholds */
 .alert-mark, .danger-mark {
   @apply absolute left-1/2 -translate-x-1/2 w-[110%] h-1.5 border-[2px] z-[25] pointer-events-none transition-all duration-500 opacity-80;

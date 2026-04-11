@@ -85,20 +85,6 @@ const RadarNetwork = ({ onNavigate }) => {
                     <EngineeringGauge sensor={s} data={sensorData[s.id]} noHeader={true} />
                 </div>
 
-                {/* Intensity Bar */}
-                <div className="mb-6">
-                    <div className="flex justify-between text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
-                        <span>Stage Intensity</span>
-                        <span className="text-academic-blue">0.12 m/hr</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: '45%' }}
-                            className="h-full bg-gradient-to-right from-amber-400 to-amber-500"
-                        />
-                    </div>
-                </div>
 
                 {/* Micro Stats */}
                 <div className="flex justify-between items-center px-2 mb-6 text-[9px] font-bold text-slate-400 uppercase">

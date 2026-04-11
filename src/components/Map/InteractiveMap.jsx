@@ -93,7 +93,7 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
                       <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-tighter leading-tight">
                         {sensor.name}
                       </h4>
-                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">RWS-{sensor.id.toUpperCase()} • {sensor.river}</p>
+                      <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">RWL-{sensor.id.toUpperCase()} • {sensor.river}</p>
                     </div>
                   </div>
                   
