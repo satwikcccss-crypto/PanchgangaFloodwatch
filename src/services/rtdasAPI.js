@@ -217,7 +217,9 @@ export const getRtdasStation = async (rtdasId) => {
  * @returns {Object}         Normalised reading
  */
 export const normalizeRtdasReading = (raw, sensor) => {
-  const waterLevel = parseFloat(raw.water_level) || 0;
+  const rawLevel = parseFloat(raw.water_level);
+  const offset = sensor.rtdasOffset || 0;
+  const waterLevel = isNaN(rawLevel) ? 0 : parseFloat((rawLevel + offset).toFixed(2));
   const temperature = parseFloat(raw.mst_temp) || null;
   const humidity = parseFloat(raw.mst_humidity) || null;
   const todayRain = parseFloat(raw.mst_today_rain) || null;
