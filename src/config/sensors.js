@@ -19,6 +19,7 @@ export const SENSORS = [
     shortName: 'CSM Bridge',
     channelId: '2505527',
     apiKey: 'GIPQ7GZ7IPG1I0GE',
+    rtdasId: '2006',  // RTDAS: Wadange (Shiroli Bridge)
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -43,6 +44,7 @@ export const SENSORS = [
     shortName: 'Ichalkaranji',
     channelId: 'YOUR_CHANNEL_ID_2',
     apiKey: 'YOUR_API_KEY_2',
+    rtdasId: '2007',  // RTDAS: Ichalkaranji
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -67,6 +69,7 @@ export const SENSORS = [
     shortName: 'Nitawade',
     channelId: 'YOUR_CHANNEL_ID_3',
     apiKey: 'YOUR_API_KEY_3',
+    rtdasId: '2004',  // RTDAS: Nitawade
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Kasari River',
     location: {
@@ -91,6 +94,8 @@ export const SENSORS = [
     shortName: 'Balinge',
     channelId: 'YOUR_CHANNEL_ID_4',
     apiKey: 'YOUR_API_KEY_4',
+    rtdasId: '2005',  // RTDAS: Balinga — COMPULSORY source
+    rtdasCompulsory: true,  // Always use RTDAS for this station
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Bhogawati River',
     location: {

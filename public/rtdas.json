@@ -1,0 +1,58 @@
+{
+  "2004": {
+    "location_id": "2004",
+    "location_name": "Nitawade",
+    "water_level": "5.32",
+    "deschage": "0.00",
+    "lastUpdateList": "09-06-2026 14:00:00",
+    "mst_today_rain": "0.0",
+    "mst_hour_rain": "0.0",
+    "mst_temp": "28.5",
+    "mst_humidity": "72",
+    "mst_arwl_river_flag": "1",
+    "latitude": "16.744708",
+    "longitude": "74.141653"
+  },
+  "2005": {
+    "location_id": "2005",
+    "location_name": "Balinga",
+    "water_level": "6.12",
+    "deschage": "0.00",
+    "lastUpdateList": "09-06-2026 14:00:00",
+    "mst_today_rain": "0.0",
+    "mst_hour_rain": "0.0",
+    "mst_temp": "29.0",
+    "mst_humidity": "70",
+    "mst_arwl_river_flag": "1",
+    "latitude": "16.691667",
+    "longitude": "74.165422"
+  },
+  "2006": {
+    "location_id": "2006",
+    "location_name": "Wadange (Shiroli Bridge)",
+    "water_level": "4.85",
+    "deschage": "0.00",
+    "lastUpdateList": "09-06-2026 14:00:00",
+    "mst_today_rain": "0.0",
+    "mst_hour_rain": "0.0",
+    "mst_temp": "28.0",
+    "mst_humidity": "75",
+    "mst_arwl_river_flag": "1",
+    "latitude": "16.707175",
+    "longitude": "74.217525"
+  },
+  "2007": {
+    "location_id": "2007",
+    "location_name": "Ichalkaranji",
+    "water_level": "3.92",
+    "deschage": "0.00",
+    "lastUpdateList": "09-06-2026 14:00:00",
+    "mst_today_rain": "0.0",
+    "mst_hour_rain": "0.0",
+    "mst_temp": "29.5",
+    "mst_humidity": "68",
+    "mst_arwl_river_flag": "1",
+    "latitude": "16.665844",
+    "longitude": "74.475964"
+  }
+}

@@ -14,6 +14,12 @@ export default defineConfig({
         target: 'https://api.thingspeak.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/thingspeak/, '')
+      },
+      // Proxy RTDAS NHP Maharashtra portal for river-level backup data
+      '/api/rtdas': {
+        target: 'http://115.242.142.174:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/rtdas/, '/NHPMH/Public/')
       }
     }
   },
