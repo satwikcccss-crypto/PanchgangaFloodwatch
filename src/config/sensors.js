@@ -20,7 +20,6 @@ export const SENSORS = [
     channelId: '2505527',
     apiKey: 'GIPQ7GZ7IPG1I0GE',
     rtdasId: '2006',  // RTDAS: Wadange (Shiroli Bridge)
-    rtdasOffset: 536.95, // Offset to convert raw meters to MSL
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -46,7 +45,6 @@ export const SENSORS = [
     channelId: 'YOUR_CHANNEL_ID_2',
     apiKey: 'YOUR_API_KEY_2',
     rtdasId: '2007',  // RTDAS: Ichalkaranji
-    rtdasOffset: 532.0,  // Offset to convert raw meters to MSL
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -72,7 +70,6 @@ export const SENSORS = [
     channelId: 'YOUR_CHANNEL_ID_3',
     apiKey: 'YOUR_API_KEY_3',
     rtdasId: '2004',  // RTDAS: Nitawade
-    rtdasOffset: 532.0,  // Offset to convert raw meters to MSL
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Kasari River',
     location: {
@@ -99,7 +96,6 @@ export const SENSORS = [
     apiKey: 'YOUR_API_KEY_4',
     rtdasId: '2005',  // RTDAS: Balinga — COMPULSORY source
     rtdasCompulsory: true,  // Always use RTDAS for this station
-    rtdasOffset: 530.5,  // Offset to convert raw meters to MSL
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Bhogawati River',
     location: {
