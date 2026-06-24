@@ -48,8 +48,8 @@ export const SENSORS = [
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
-      lat: 16.711944,
-      lng: 74.272222
+      lat: 16.712192,
+      lng: 74.281152
     },
     district: 'Kolhapur',
     authority: 'WRD Maharashtra',

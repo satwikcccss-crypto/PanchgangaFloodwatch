@@ -9,21 +9,29 @@ import 'leaflet/dist/leaflet.css';
 
 const { BaseLayer } = LayersControl;
 
-// Custom Marker Creator
+// Custom SVG sensor marker icon
 const createMarkerIcon = (isSelected, color, alertLevel) => {
-  const size = isSelected ? 48 : 32;
+  const size = isSelected ? 52 : 38;
+  const glow = isSelected ? `filter: drop-shadow(0 0 10px ${color}bb);` : '';
+  const badge = alertLevel !== 'normal'
+    ? `<div style="position:absolute;top:-5px;right:-5px;width:14px;height:14px;border-radius:50%;background:${color};border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:white;line-height:1;">!</div>`
+    : '';
+  const pulse = isSelected
+    ? `<div style="position:absolute;inset:-8px;border-radius:50%;border:3px solid ${color}88;animation:pulse-ring 1.5s ease-out infinite;"></div>`
+    : '';
+
   return L.divIcon({
-    className: 'custom-marker',
+    className: 'custom-sensor-marker',
     html: `
-      <div class="marker-container ${isSelected ? 'selected' : ''}" style="width: ${size}px; height: ${size}px;">
-        <div class="marker-pulse" style="background-color: ${color}"></div>
-        <div class="marker-core" style="background-color: ${color}; border-color: white;">
-           <span class="marker-label">${alertLevel === 'normal' ? '' : '!'}</span>
-        </div>
+      <div style="position:relative;width:${size}px;height:${size}px;">
+        ${pulse}
+        <div style="position:absolute;inset:0;background:${color};${glow};mask:url(/PanchgangaFloodwatch/water-level-sensor-2.svg) center/contain no-repeat;-webkit-mask:url(/PanchgangaFloodwatch/water-level-sensor-2.svg) center/contain no-repeat;"></div>
+        ${badge}
       </div>
     `,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconAnchor: [size / 2, size],
+    tooltipAnchor: [0, -size],
   });
 };
 
