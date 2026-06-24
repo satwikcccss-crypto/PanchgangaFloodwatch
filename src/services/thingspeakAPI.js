@@ -16,6 +16,13 @@ import { fetchAllRtdasStations, normalizeRtdasReading } from './rtdasAPI';
 const THINGSPEAK_BASE_URL = 'https://api.thingspeak.com/channels';
 
 /**
+ * Module-level cache: keyed by sensorId → last valid reading object.
+ * This ensures the gauge always shows the last known good value
+ * instead of dropping to 0 when ThingSpeak returns null.
+ */
+const lastKnownReading = {};
+
+/**
  * Fetch latest water level data for a specific sensor
  */
 export const fetchLatestReading = async (sensorId) => {
@@ -32,9 +39,21 @@ export const fetchLatestReading = async (sensorId) => {
       params: { api_key: sensor.apiKey },
       timeout: 10000,
     });
-    return parseThingSpeakResponse(response.data, sensor);
+    const parsed = parseThingSpeakResponse(response.data, sensor);
+    
+    // If valid reading, update cache; otherwise return last known
+    if (parsed.waterLevel > 0) {
+      lastKnownReading[sensorId] = parsed;
+      return parsed;
+    }
+    if (lastKnownReading[sensorId]) {
+      console.log(`[ThingSpeak] ${sensor.shortName}: null reading — using last known (${lastKnownReading[sensorId].waterLevel}m)`);
+      return { ...lastKnownReading[sensorId], timestamp: parsed.timestamp };
+    }
+    return parsed;
   } catch (error) {
     console.error(`Error fetching data for ${sensor.name}:`, error);
+    if (lastKnownReading[sensorId]) return lastKnownReading[sensorId];
     return generateMockData(sensor);
   }
 };
