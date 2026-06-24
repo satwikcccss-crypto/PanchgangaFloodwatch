@@ -13,8 +13,8 @@ This script fetches the page, extracts only these 4 stations, and saves to CSV.
 Usage:
   pip install requests
   python balinga_fetcher.py                        # fetch once
-  python balinga_fetcher.py --loop                 # every 5 min (default)
-  python balinga_fetcher.py --loop --interval 60   # every 1 min
+  python balinga_fetcher.py --loop                 # every 15 min (default)
+  python balinga_fetcher.py --loop --interval 300  # every 5 min
 """
 
 import requests, re, csv, json, os, time, logging, argparse
@@ -31,7 +31,7 @@ log = logging.getLogger()
 URL      = "http://115.242.142.174:8080/NHPMH/Public/"
 OUTPUT   = "balinga_river_levels.csv"
 OUTPUT_JSON = os.path.join("public", "rtdas.json")
-INTERVAL = 300   # seconds (5 min)
+INTERVAL = 900   # seconds (15 min) — matches RTDAS server update cadence
 
 # Target station IDs → names
 TARGET_STATIONS = {
