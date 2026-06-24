@@ -60,7 +60,7 @@ export const GaugeWidget = ({ sensor, data, active, onClick }) => {
       {/* Footer */}
       <div className="flex justify-between items-end mt-2">
         <span className="text-[8px] font-black text-slate-300 uppercase tracking-[0.2em]">
-          RTDAS Live Uplink
+          {data?.dataSource || 'Live'}
         </span>
         <div 
           className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-slate-100 bg-slate-50 shadow-sm" 
