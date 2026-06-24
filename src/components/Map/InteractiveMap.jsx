@@ -124,28 +124,6 @@ const InteractiveMap = ({ sensorData, selectedSensor, onSensorClick }) => {
           );
         })}
       </MapContainer>
-
-      {/* Floating Legend */}
-      <div className="absolute bottom-10 left-6 z-[1000] space-y-2 pointer-events-none">
-         <div className="bg-white/90 backdrop-blur p-4 rounded-2xl border border-slate-200 shadow-xl pointer-events-auto">
-            <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Rainfall Intensity Level</h4>
-            <div className="space-y-2">
-               {[
-                 { label: 'Normal / Light', color: '#10b981' },
-                 { label: 'Warning / Moderate', color: '#f59e0b' },
-                 { label: 'Critical / Heavy', color: '#ef4444' }
-               ].map(item => (
-                 <div key={item.label} className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-tight">{item.label}</span>
-                 </div>
-               ))}
-            </div>
-         </div>
-         <div className="bg-academic-blue px-3 py-1.5 rounded-lg text-white text-[8px] font-black tracking-[0.2em] shadow-lg pointer-events-none uppercase">
-           CCCSS Flood Monitoring Net
-         </div>
-      </div>
     </div>
   );
 };
