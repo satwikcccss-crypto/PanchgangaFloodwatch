@@ -25,7 +25,7 @@ const RadarNetwork = ({ onNavigate }) => {
     };
 
     loadData();
-    const interval = setInterval(loadData, 60000);
+    const interval = setInterval(loadData, 900000); // 15 minutes — RTDAS update cadence
     return () => clearInterval(interval);
   }, []);
 

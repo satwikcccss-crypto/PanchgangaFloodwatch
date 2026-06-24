@@ -19,7 +19,7 @@ export const ALERT_CONFIG = {
     bgColor: '#FFFFFF'
   },
   
-  updateInterval: 60000,
+  updateInterval: 900000, // 15 minutes — aligned with RTDAS data update cadence
   enableNotifications: true,
   enableSoundAlerts: true,
   enableFlashingAlerts: true,
