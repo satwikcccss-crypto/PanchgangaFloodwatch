@@ -17,7 +17,7 @@ export const SENSORS = [
     id: 'shivaji_bridge',
     name: 'Chhatrapati Shivaji Maharaj (CSM) Bridge',
     shortName: 'CSM Bridge',
-    channelId: '2505527',
+    channelId: '2825710',
     apiKey: '8A3XEM6ICC1VRV60',
     sensorType: 'Ultrasonic Radar — ThingSpeak',
     river: 'Panchganga River',

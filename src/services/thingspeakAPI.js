@@ -191,7 +191,15 @@ export const fetchAllSensors = async () => {
  * Parse ThingSpeak API response
  */
 const parseThingSpeakResponse = (data, sensor) => {
-  const waterLevel = parseFloat(data[THINGSPEAK_FIELDS.waterLevel]) || 0;
+  let waterLevel = parseFloat(data[THINGSPEAK_FIELDS.waterLevel]) || 0;
+  
+  // Calculate MSL water level from raw distance for Shivaji Bridge
+  if (sensor.id === 'shivaji_bridge' && waterLevel > 0) {
+    // Sensor MSL height is 549.35m. Sensor measures raw distance in FEET.
+    // Convert feet to meters (1 foot = 0.3048 meters) and subtract from MSL.
+    waterLevel = parseFloat((549.35 - (waterLevel * 0.3048)).toFixed(2));
+  }
+
   const temperature = parseFloat(data[THINGSPEAK_FIELDS.temperature]) || null;
   const batteryVoltage = parseFloat(data[THINGSPEAK_FIELDS.batteryVoltage]) || null;
   const signalStrength = parseFloat(data[THINGSPEAK_FIELDS.signalStrength]) || null;
