@@ -61,8 +61,20 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
     if (!response.data || !response.data.feeds) {
        return generateMockHistoricalData(sensor, results);
     }
+    const parsedFeeds = response.data.feeds.map(feed => parseThingSpeakResponse(feed, sensor));
+    
+    // Forward-fill zero/inactive values with the last known good value
+    let lastValidWaterLevel = 0;
+    parsedFeeds.forEach(feed => {
+      if (feed.waterLevel > 0) {
+        lastValidWaterLevel = feed.waterLevel;
+      } else if (lastValidWaterLevel > 0) {
+        feed.waterLevel = lastValidWaterLevel;
+        feed.status = 'active'; // Keep status active using last known good value
+      }
+    });
 
-    return response.data.feeds.map(feed => parseThingSpeakResponse(feed, sensor));
+    return parsedFeeds;
   } catch (error) {
     console.error(`Error fetching historical data for ${sensor.name}:`, error);
     return generateMockHistoricalData(sensor, results);
