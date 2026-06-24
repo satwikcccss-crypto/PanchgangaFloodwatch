@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Activity, Target, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight, Globe, Battery, Signal, Zap, TrendingUp, TrendingDown } from 'lucide-react';
+import { X, ExternalLink, Activity, ShieldAlert, Waves, ArrowUpRight, ArrowDownRight, Globe, Zap, TrendingUp, TrendingDown } from 'lucide-react';
 import { getAlertConfig } from '../../config/alerts';
 import BasinAnalyticsChart from '../Charts/BasinAnalyticsChart';
 
@@ -356,37 +356,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                 </div>
             </div>
 
-            {/* TECHNICAL FOOTER */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 mt-4 border-t border-slate-100 shrink-0">
-                <div className="flex flex-col gap-1">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Battery Status</span>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700 font-mono">
-                        <Battery className="w-3 h-3 text-amber-500" />
-                        {data?.power || '11.51'} V
-                    </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Signal Health</span>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700 font-mono">
-                        <Signal className="w-3 h-3 text-emerald-500" />
-                        {data?.signal || 97}%
-                    </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Sensor Compliance</span>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-700">
-                        <Target className="w-3 h-3 text-slate-400" />
-                        ISO/IS Standard
-                    </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Data Integrity</span>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-academic-gold">
-                        <Globe className="w-3 h-3" />
-                        Live RTDAS
-                    </div>
-                </div>
-            </div>
+
           </div>
         </motion.div>
       </div>

@@ -58,12 +58,6 @@ const AlertBanner = ({ alertLevel, triggers = [], riskTrend = 'stable' }) => {
           {getStatusText()}
         </p>
       </div>
-      <div className="hidden lg:block border-l border-current/10 pl-6 ml-6">
-        <div className="flex flex-col gap-0.5">
-           <span className="text-[8px] font-black uppercase tracking-widest opacity-60">Source Standard</span>
-           <span className="text-[9px] font-bold text-slate-800">WRD RTDAS MAHARASHTRA</span>
-        </div>
-      </div>
     </motion.div>
   );
 };
