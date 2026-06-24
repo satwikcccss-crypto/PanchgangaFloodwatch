@@ -259,7 +259,7 @@ const determineAlertLevel = (history, dangerLevels) => {
  */
 const generateMockData = (sensor) => {
   const baseLevel = {
-    jayanti_nala: 540.5,
+    jayanti_nala: 539.0,
     shivaji_bridge: 541.8,
     ichalkaranji_br: 535.2,
     nitawade_kt: 542.5,
@@ -292,7 +292,7 @@ const generateMockHistoricalData = (sensor, points = 150) => {
   const data = [];
   const now = new Date();
   const baseLevel = {
-    jayanti_nala: 540.5,
+    jayanti_nala: 539.0,
     shivaji_bridge: 541.8,
     ichalkaranji_br: 535.2,
     nitawade_kt: 542.5,

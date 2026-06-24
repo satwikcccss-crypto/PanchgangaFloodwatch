@@ -18,9 +18,8 @@ export const SENSORS = [
     name: 'Chhatrapati Shivaji Maharaj (CSM) Bridge',
     shortName: 'CSM Bridge',
     channelId: '2505527',
-    apiKey: 'GIPQ7GZ7IPG1I0GE',
-    rtdasId: '2006',  // RTDAS: Wadange (Shiroli Bridge)
-    sensorType: 'Ultrasonic Radar — RTDAS',
+    apiKey: '8A3XEM6ICC1VRV60',
+    sensorType: 'Ultrasonic Radar — ThingSpeak',
     river: 'Panchganga River',
     location: {
       // DMS: 16°42'25.83"N 74°13'03.09"E
@@ -37,6 +36,31 @@ export const SENSORS = [
       hfl: 545.33
     },
     markerColor: '#0f4c81'
+  },
+  {
+    id: 'wadange_br',
+    name: 'Wadange (Shiroli Bridge)',
+    shortName: 'Wadange',
+    channelId: '',
+    apiKey: '',
+    rtdasId: '2006',
+    rtdasCompulsory: true,
+    sensorType: 'Ultrasonic Radar — RTDAS',
+    river: 'Panchganga River',
+    location: {
+      lat: 16.711944,
+      lng: 74.272222
+    },
+    district: 'Kolhapur',
+    authority: 'WRD Maharashtra',
+    description: 'River level station at Wadange fetched directly via the RTDAS portal of the Maharashtra WRD (NHPMH).',
+    dangerLevels: {
+      warning: 542.73,
+      danger: 543.33,
+      extreme: 544.33,
+      hfl: 545.33
+    },
+    markerColor: '#0ea5e9'
   },
   {
     id: 'ichalkaranji_br',
@@ -105,7 +129,7 @@ export const SENSORS = [
     },
     district: 'Kolhapur',
     authority: 'WRD Maharashtra',
-    description: 'Ultrasonic radar sensor at Balinge Bridge over the Bhogawati River — a western tributary feeding the Panchganga. Provides early flood signal for Kolhapur city. Alert levels per WRD RTDSS Krishna (RBL 530.5 m MSL).',
+    description: 'Ultrasonic radar sensor at Balinge Bridge over the Bhogawati River. Water levels are directly fetched via the RTDAS portal of the Maharashtra WRD (NHPMH). Provides early flood signal for Kolhapur city.',
     dangerLevels: {
       warning: 542.34,
       danger: 543.14,
