@@ -41,28 +41,7 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
            </div>
         </div>
 
-        <nav className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200">
-          <button 
-            onClick={() => onNavigate('dashboard')}
-            className={`flex-1 py-2 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg transition-all ${
-              currentPage === 'dashboard' 
-              ? 'bg-white text-academic-blue shadow-sm' 
-              : 'text-slate-400 hover:text-academic-blue'
-            }`}
-          >
-            Dashboard
-          </button>
-          <button 
-            onClick={() => onNavigate('network')}
-            className={`flex-1 py-2 text-[8px] font-black uppercase tracking-[0.2em] rounded-lg transition-all ${
-              currentPage === 'network' 
-              ? 'bg-white text-academic-blue shadow-sm' 
-              : 'text-slate-400 hover:text-academic-blue'
-            }`}
-          >
-            Radar Network
-          </button>
-        </nav>
+
       </div>
     );
   }
@@ -90,40 +69,14 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
           </div>
         </div>
 
-        {/* Navigation Tabs & Mobile Tools */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-center mt-2 md:mt-0">
-          <nav className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-lg border border-slate-200 flex-grow sm:flex-grow-0">
-            <button 
-              onClick={() => onNavigate('dashboard')}
-              className={`flex-grow sm:flex-initial px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
-                currentPage === 'dashboard' 
-                ? 'bg-white text-academic-blue shadow-sm' 
-                : 'text-slate-500 hover:text-academic-blue'
-              }`}
-            >
-              Dashboard
-            </button>
-            <button 
-              onClick={() => onNavigate('network')}
-              className={`flex-grow sm:flex-initial px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
-                currentPage === 'network' 
-                ? 'bg-white text-academic-blue shadow-sm' 
-                : 'text-slate-500 hover:text-academic-blue'
-              }`}
-            >
-              Radar Network
-            </button>
-          </nav>
-
-          {/* Info button visible on mobile/tablet (hidden on xl) */}
-          <button 
-            onClick={onAboutClick}
-            className="xl:hidden p-2 text-academic-blue hover:bg-slate-100 border border-slate-200 rounded-lg bg-slate-50 hover:text-blue-900 transition-all active:scale-95 flex-shrink-0"
-            title="Project Info"
-          >
-            <Info className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Info button visible on mobile/tablet (hidden on xl) */}
+        <button 
+          onClick={onAboutClick}
+          className="xl:hidden p-2 text-academic-blue hover:bg-slate-100 border border-slate-200 rounded-lg bg-slate-50 hover:text-blue-900 transition-all active:scale-95 flex-shrink-0"
+          title="Project Info"
+        >
+          <Info className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="hidden xl:flex items-center gap-6">
