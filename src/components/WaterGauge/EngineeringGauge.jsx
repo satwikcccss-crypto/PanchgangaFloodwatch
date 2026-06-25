@@ -289,7 +289,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
 
             {/* INTEGRATED GAUGE (Left) */}
             <div className="flex-grow flex flex-col items-center justify-center py-4 bg-white/80 rounded-2xl border border-slate-100 shadow-inner min-h-[350px]">
-                <h4 className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Atmospheric Load MSL</h4>
+                <h4 className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Water Level Gauge MSL</h4>
                 <div className="w-full max-h-[400px]">
                     <EngineeringGauge sensor={sensor} data={data} noHeader={true} />
                 </div>
