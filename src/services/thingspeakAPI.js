@@ -61,10 +61,91 @@ export const fetchLatestReading = async (sensorId) => {
 /**
  * Fetch historical data for charts
  */
+// Parses actual historical data from public/balinga_river_levels.csv for RTDAS stations
+const parseHistoricalRtdasCSV = (csvText, sensor, limit = 150) => {
+  const lines = csvText.split('\n');
+  if (lines.length < 2) return [];
+  
+  const headers = lines[0].split(',').map(h => h.trim());
+  const fetchedAtIdx = headers.indexOf('Fetched At');
+  const stationIdIdx = headers.indexOf('Station ID');
+  const waterLevelIdx = headers.indexOf('Water Level (m)');
+  const lastUpdatedIdx = headers.indexOf('Last Updated');
+  const tempIdx = headers.indexOf('Temperature (°C)');
+  const humidityIdx = headers.indexOf('Humidity (%)');
+  const dischargeIdx = headers.indexOf('Discharge');
+  const todayRainIdx = headers.indexOf('Today Rain (mm)');
+  const hourlyRainIdx = headers.indexOf('Hourly Rain (mm)');
+  
+  const records = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    
+    const parts = line.split(',');
+    if (parts.length < headers.length) continue;
+    
+    const rtdasId = parts[stationIdIdx]?.trim();
+    if (rtdasId !== sensor.rtdasId) continue;
+    
+    const rawWaterLevel = parseFloat(parts[waterLevelIdx]) || 0;
+    if (rawWaterLevel <= 0) continue;
+    
+    const rawTime = parts[lastUpdatedIdx]?.trim() || parts[fetchedAtIdx]?.trim();
+    let timestamp = new Date().toISOString();
+    if (rawTime) {
+      const parsedDate = new Date(rawTime.replace(' ', 'T') + '+05:30');
+      if (!isNaN(parsedDate.getTime())) {
+        timestamp = parsedDate.toISOString();
+      }
+    }
+    
+    records.push({
+      sensorId: sensor.id,
+      sensorName: sensor.name,
+      timestamp,
+      waterLevel: rawWaterLevel,
+      temperature: parseFloat(parts[tempIdx]) || null,
+      humidity: parseFloat(parts[humidityIdx]) || null,
+      todayRain: parseFloat(parts[todayRainIdx]) || null,
+      hourlyRain: parseFloat(parts[hourlyRainIdx]) || null,
+      discharge: parseFloat(parts[dischargeIdx]) || null,
+      batteryVoltage: null,
+      signalStrength: null,
+      dangerLevels: sensor.dangerLevels,
+      location: sensor.location,
+      status: 'active',
+      dataSource: 'RTDAS',
+      isMockData: false
+    });
+  }
+  
+  records.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  return records.slice(-limit);
+};
+
 export const fetchHistoricalData = async (sensorId, results = 150) => {
   const sensor = SENSORS.find(s => s.id === sensorId);
   if (!sensor) throw new Error(`Sensor ${sensorId} not found`);
   
+  // If sensor has an RTDAS ID, fetch from local/hosted CSV history first
+  if (sensor.rtdasId) {
+    try {
+      const baseUrl = import.meta.env.BASE_URL || '/';
+      const csvUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}balinga_river_levels.csv`;
+      
+      const response = await axios.get(csvUrl, { timeout: 10000 });
+      if (response.data && typeof response.data === 'string') {
+        const parsed = parseHistoricalRtdasCSV(response.data, sensor, results);
+        if (parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (err) {
+      console.warn(`[Historical] RTDAS CSV load failed for ${sensor.shortName}:`, err.message);
+    }
+  }
+
   // Strict check for unconfigured channels
   if (!sensor.channelId || sensor.channelId.includes('YOUR_CHANNEL') || sensor.channelId === '') {
     return generateMockHistoricalData(sensor, results);

@@ -12,13 +12,23 @@
  * based on WRD / IMD / CWC authoritative sources. Ownership: CCCSS, Shivaji University.
  */
 
+// Base64 helper to obfuscate sensitive keys and endpoints in the client bundle
+const _dec = (s) => {
+  if (!s) return '';
+  try {
+    return atob(s);
+  } catch (e) {
+    return s;
+  }
+};
+
 export const SENSORS = [
   {
     id: 'shivaji_bridge',
     name: 'Chhatrapati Shivaji Maharaj (CSM) Bridge',
     shortName: 'CSM Bridge',
-    channelId: '2825710',
-    apiKey: '8A3XEM6ICC1VRV60',
+    channelId: _dec('MjgyNTcxMA=='), // 2825710
+    apiKey: _dec('OEEzWEVNNklDQzFWUlY2MA=='), // 8A3XEM6ICC1VRV60
     sensorType: 'Ultrasonic Radar — ThingSpeak',
     river: 'Panchganga River',
     location: {
@@ -43,7 +53,7 @@ export const SENSORS = [
     shortName: 'Wadange',
     channelId: '',
     apiKey: '',
-    rtdasId: '2006',
+    rtdasId: _dec('MjAwNg=='), // 2006
     rtdasCompulsory: true,
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
@@ -66,9 +76,9 @@ export const SENSORS = [
     id: 'ichalkaranji_br',
     name: 'Ichalkaranji Bridge',
     shortName: 'Ichalkaranji',
-    channelId: 'YOUR_CHANNEL_ID_2',
-    apiKey: 'YOUR_API_KEY_2',
-    rtdasId: '2007',  // RTDAS: Ichalkaranji
+    channelId: _dec('WU9VUl9DSEFOTkVMX0lEXzI='),
+    apiKey: _dec('WU9VUl9BUElfS0VZXzI='),
+    rtdasId: _dec('MjAwNw=='),  // 2007
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Panchganga River',
     location: {
@@ -91,9 +101,9 @@ export const SENSORS = [
     id: 'nitawade_kt',
     name: 'Nitawade Kasari River Bridge',
     shortName: 'Nitawade',
-    channelId: 'YOUR_CHANNEL_ID_3',
-    apiKey: 'YOUR_API_KEY_3',
-    rtdasId: '2004',  // RTDAS: Nitawade
+    channelId: _dec('WU9VUl9DSEFOTkVMX0lEXzM='),
+    apiKey: _dec('WU9VUl9BUElfS0VZXzM='),
+    rtdasId: _dec('MjAwNA=='),  // 2004
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Kasari River',
     location: {
@@ -116,9 +126,9 @@ export const SENSORS = [
     id: 'balinga_br',
     name: 'Balinge Bhogawati River Bridge',
     shortName: 'Balinge',
-    channelId: 'YOUR_CHANNEL_ID_4',
-    apiKey: 'YOUR_API_KEY_4',
-    rtdasId: '2005',  // RTDAS: Balinga — COMPULSORY source
+    channelId: _dec('WU9VUl9DSEFOTkVMX0lEXzQ='),
+    apiKey: _dec('WU9VUl9BUElfS0VZXzQ='),
+    rtdasId: _dec('MjAwNQ=='),  // 2005
     rtdasCompulsory: true,  // Always use RTDAS for this station
     sensorType: 'Ultrasonic Radar — RTDAS',
     river: 'Bhogawati River',

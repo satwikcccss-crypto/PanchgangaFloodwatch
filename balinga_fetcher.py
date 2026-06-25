@@ -29,7 +29,7 @@ log = logging.getLogger()
 
 # ── Config ──────────────────────────────────────────────────────────────────
 URL      = "http://115.242.142.174:8080/NHPMH/Public/"
-OUTPUT   = "balinga_river_levels.csv"
+OUTPUT   = os.path.join("public", "balinga_river_levels.csv")
 OUTPUT_JSON = os.path.join("public", "rtdas.json")
 INTERVAL = 900   # seconds (15 min) — matches RTDAS server update cadence
 

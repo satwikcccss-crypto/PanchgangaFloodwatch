@@ -16,32 +16,17 @@ import { fetchAllSensors } from '../../services/thingspeakAPI';
 import { SENSORS } from '../../config/sensors';
 import { getAlertConfig, calculateBasinRisk } from '../../config/alerts';
 
-const MainDashboard = ({ onNavigate }) => {
-  const [sensorData, setSensorData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState(null);
-  const [selectedSensorId, setSelectedSensorId] = useState(SENSORS[0].id);
-  const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [detailedSensor, setDetailedSensor] = useState(null);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await fetchAllSensors();
-        setSensorData(data);
-        setLastUpdate(new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-        setLoading(false);
-      } catch (err) {
-        console.error('Failed to fetch sensor data:', err);
-        setLoading(false);
-      }
-    };
-
-    loadData();
-    const interval = setInterval(loadData, 900000); // 15 minutes — RTDAS update cadence
-    return () => clearInterval(interval);
-  }, []);
-
+const MainDashboard = ({ 
+  onNavigate, 
+  sensorData = {}, 
+  loading = true, 
+  lastUpdate = null, 
+  selectedSensorId, 
+  setSelectedSensorId, 
+  setDetailedSensor, 
+  isAboutOpen, 
+  setIsAboutOpen 
+}) => {
   const basinRisk = calculateBasinRisk(sensorData);
 
   return (
@@ -130,14 +115,6 @@ const MainDashboard = ({ onNavigate }) => {
 
        <DisclaimerFooter />
        <InfoPanel isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
-       
-       {detailedSensor && (
-          <ZoomedGauge
-            sensor={detailedSensor}
-            data={sensorData[detailedSensor.id]}
-            onClose={() => setDetailedSensor(null)}
-          />
-       )}
     </div>
   );
 };

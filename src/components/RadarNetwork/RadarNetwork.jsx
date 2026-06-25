@@ -6,28 +6,13 @@ import { SENSORS } from '../../config/sensors';
 import { motion } from 'framer-motion';
 import { LayoutGrid, Info, Activity, Globe, Clock, ShieldAlert, Radio, Battery, Signal, Zap, ChevronRight } from 'lucide-react';
 
-const RadarNetwork = ({ onNavigate }) => {
-  const [sensorData, setSensorData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState(null);
-  const [zoomedSensor, setZoomedSensor] = useState(null);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await fetchAllSensors();
-        setSensorData(data);
-        setLastUpdate(new Date().toLocaleTimeString());
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch sensor data:", err);
-      }
-    };
-
-    loadData();
-    const interval = setInterval(loadData, 900000); // 15 minutes — RTDAS update cadence
-    return () => clearInterval(interval);
-  }, []);
+const RadarNetwork = ({ 
+  onNavigate,
+  sensorData = {},
+  loading = true,
+  lastUpdate = null,
+  setDetailedSensor
+}) => {
 
   return (
     <div className="min-h-screen flex flex-col pt-8 engineering-grid">
@@ -104,7 +89,7 @@ const RadarNetwork = ({ onNavigate }) => {
 
                 {/* Action */}
                 <button 
-                    onClick={() => setZoomedSensor(s)}
+                    onClick={() => setDetailedSensor(s)}
                     className="w-full py-3 border border-slate-100 rounded-xl text-[10px] font-black font-serif text-slate-400 uppercase tracking-widest hover:bg-slate-50 hover:text-academic-blue transition-all group-hover:border-academic-blue/20"
                 >
                     View Full Analytics
@@ -133,13 +118,6 @@ const RadarNetwork = ({ onNavigate }) => {
         </div>
       </div>
 
-      {zoomedSensor && (
-        <ZoomedGauge 
-          sensor={zoomedSensor} 
-          data={sensorData[zoomedSensor.id]} 
-          onClose={() => setZoomedSensor(null)} 
-        />
-      )}
     </div>
   );
 };
