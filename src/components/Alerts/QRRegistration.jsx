@@ -20,9 +20,9 @@ const QRRegistration = () => {
         </div>
       </div>
 
-      <div className="flex items-start gap-3">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-3">
         {/* QR Code */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex flex-col items-center">
           <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
             {isConfigured ? (
               <QRCodeSVG
@@ -43,7 +43,7 @@ const QRRegistration = () => {
         </div>
 
         {/* Steps + button */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 w-full">
           <div className="space-y-1.5 mb-3">
             {[
               'Scan QR or click Open Form',

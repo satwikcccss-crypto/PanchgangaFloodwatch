@@ -41,13 +41,13 @@ const AlertBanner = ({ alertLevel, triggers = [], riskTrend = 'stable' }) => {
         </div>
       </div>
       <div className="flex-grow">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <h2 className="text-[10px] font-black uppercase tracking-[0.2em]">{config.label}</h2>
-          <span className="h-3 w-px bg-current opacity-20" />
+          <span className="h-3 w-px bg-current opacity-20 hidden sm:inline" />
           <h2 className="text-[10px] font-black tracking-widest">{config.labelMr}</h2>
           
           {riskTrend !== 'stable' && (
-             <span className={`ml-auto text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+             <span className={`sm:ml-auto text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
                 riskTrend === 'surging' ? 'bg-red-500 text-white animate-pulse' : 'bg-amber-100 text-amber-600'
              }`}>
                 {riskTrend === 'surging' ? 'Rapid Surge Detected' : 'Basin Rising'}

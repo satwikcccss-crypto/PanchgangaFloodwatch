@@ -69,50 +69,61 @@ const HeaderBar = ({ connectionStatus, lastUpdateTime, onAboutClick, onNavigate,
 
   return (
     <header className="inst-header">
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-4 border-r border-slate-200 pr-6 mr-2">
-          <div className="p-1">
+      <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-4 border-b md:border-b-0 md:border-r border-slate-200 pb-4 md:pb-0 pr-0 md:pr-6 mr-0 md:mr-2 w-full md:w-auto text-center sm:text-left">
+          <div className="p-1 flex-shrink-0">
             <img 
               src={`${import.meta.env.BASE_URL}cccss_logo.png`} 
               alt="Shivaji University CCCSS" 
-              className="h-14 lg:h-16 object-contain"
+              className="h-16 sm:h-14 lg:h-16 object-contain hover:scale-105 transition-transform duration-300"
               onError={(e) => { e.target.src = 'https://upload.wikimedia.org/wikipedia/en/b/b3/Shivaji_University_logo.png'; }}
             />
           </div>
-          <div className="flex flex-col">
-            <h1 className="text-xl lg:text-2xl font-bold font-serif text-academic-blue tracking-tight leading-snug max-w-md">
+          <div className="flex flex-col items-center sm:items-start">
+            <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold font-serif text-academic-blue tracking-tight leading-snug max-w-md">
               Realtime River Water Level Monitoring System<br/>
-              <span className="text-lg lg:text-xl">Shivaji University, Kolhapur</span>
+              <span className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold block mt-0.5">Shivaji University, Kolhapur</span>
             </h1>
-            <h2 className="text-[9px] lg:text-[10px] font-bold text-academic-gold uppercase tracking-[0.2em] mt-1.5 opacity-90">
+            <h2 className="text-[9px] lg:text-[10px] font-bold text-academic-gold uppercase tracking-[0.15em] mt-1.5 opacity-90 text-center sm:text-left">
               Developed by: Centre for Climate Change and Sustainability Studies (CCCSS)
             </h2>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-lg border border-slate-200">
+        {/* Navigation Tabs & Mobile Tools */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-center mt-2 md:mt-0">
+          <nav className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-lg border border-slate-200 flex-grow sm:flex-grow-0">
+            <button 
+              onClick={() => onNavigate('dashboard')}
+              className={`flex-grow sm:flex-initial px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
+                currentPage === 'dashboard' 
+                ? 'bg-white text-academic-blue shadow-sm' 
+                : 'text-slate-500 hover:text-academic-blue'
+              }`}
+            >
+              Dashboard
+            </button>
+            <button 
+              onClick={() => onNavigate('network')}
+              className={`flex-grow sm:flex-initial px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
+                currentPage === 'network' 
+                ? 'bg-white text-academic-blue shadow-sm' 
+                : 'text-slate-500 hover:text-academic-blue'
+              }`}
+            >
+              Radar Network
+            </button>
+          </nav>
+
+          {/* Info button visible on mobile/tablet (hidden on xl) */}
           <button 
-            onClick={() => onNavigate('dashboard')}
-            className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
-              currentPage === 'dashboard' 
-              ? 'bg-white text-academic-blue shadow-sm' 
-              : 'text-slate-500 hover:text-academic-blue'
-            }`}
+            onClick={onAboutClick}
+            className="xl:hidden p-2 text-academic-blue hover:bg-slate-100 border border-slate-200 rounded-lg bg-slate-50 hover:text-blue-900 transition-all active:scale-95 flex-shrink-0"
+            title="Project Info"
           >
-            Dashboard
+            <Info className="w-5 h-5" />
           </button>
-          <button 
-            onClick={() => onNavigate('network')}
-            className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest rounded transition-all ${
-              currentPage === 'network' 
-              ? 'bg-white text-academic-blue shadow-sm' 
-              : 'text-slate-500 hover:text-academic-blue'
-            }`}
-          >
-            Radar Network
-          </button>
-        </nav>
+        </div>
       </div>
 
       <div className="hidden xl:flex items-center gap-6">

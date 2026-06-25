@@ -259,10 +259,10 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
-          className="bg-white rounded-[2rem] relative z-10 w-full max-w-6xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-h-[95vh] border border-white/20"
+          className="bg-white rounded-[2rem] relative z-10 w-full max-w-6xl shadow-2xl flex flex-col md:flex-row overflow-y-auto md:overflow-hidden max-h-[95vh] border border-white/20"
         >
           {/* LEFT SIDEBAR (Station Profile) */}
-          <div className="md:w-[320px] bg-slate-50/50 border-r border-slate-100 p-6 flex flex-col shrink-0 overflow-y-auto">
+          <div className="w-full md:w-[320px] bg-slate-50/50 border-b md:border-b-0 md:border-r border-slate-100 p-6 flex flex-col shrink-0 md:overflow-y-auto">
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-9 h-9 rounded-xl bg-academic-blue flex items-center justify-center shadow-lg shadow-academic-blue/20">
                     <Zap className="w-5 h-5 text-white" />
@@ -303,7 +303,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
           </div>
 
           {/* RIGHT DASHBOARD (Analytics) */}
-          <div className="flex-grow p-6 flex flex-col bg-white overflow-hidden relative">
+          <div className="flex-grow p-6 flex flex-col bg-white md:overflow-hidden relative">
             <button onClick={onClose} className="absolute top-6 right-6 z-20 p-2 text-slate-300 hover:text-red-500 rounded-full transition-all hover:bg-slate-50 box-content">
               <X className="w-6 h-6" />
             </button>
@@ -334,7 +334,7 @@ export const ZoomedGauge = ({ sensor, data, onClose }) => {
                   </div>
 
                   {/* MAIN HYETOGRAPH CHART */}
-                  <div className="p-5 bg-white border border-slate-100 rounded-[1.5rem] shadow-sm relative overflow-hidden h-[420px] flex flex-col">
+                  <div className="p-4 md:p-5 bg-white border border-slate-100 rounded-[1.5rem] shadow-sm relative overflow-hidden h-[300px] sm:h-[350px] md:h-[420px] flex flex-col">
                       <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full bg-academic-blue animate-pulse" />

@@ -62,7 +62,7 @@ const MainDashboard = ({ onNavigate }) => {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
               {/* Left Column: Map & Chart */}
               <div className="xl:col-span-8 space-y-6">
-                 <div className="academic-panel h-[600px] overflow-hidden relative group">
+                 <div className="academic-panel h-[350px] sm:h-[450px] md:h-[550px] xl:h-[600px] overflow-hidden relative group">
                    <InteractiveMap
                      sensorData={sensorData}
                      selectedSensor={selectedSensorId}
@@ -73,17 +73,17 @@ const MainDashboard = ({ onNavigate }) => {
                    />
                  </div>
 
-                 <div className="academic-panel p-6">
-                    <div className="flex items-center justify-between mb-6">
-                       <h3 className="text-sm font-bold text-academic-blue uppercase tracking-widest flex items-center gap-2">
-                          <Activity className="w-5 h-5" /> Time-Series Stage Analysis
+                 <div className="academic-panel p-4 md:p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                       <h3 className="text-xs md:text-sm font-bold text-academic-blue uppercase tracking-widest flex items-center gap-2">
+                          <Activity className="w-5 h-5 flex-shrink-0" /> Time-Series Stage Analysis
                        </h3>
-                       <div className="flex gap-2">
+                       <div className="flex flex-wrap gap-1.5 md:gap-2">
                           {SENSORS.map(s => (
                             <button
                               key={s.id}
                               onClick={() => setSelectedSensorId(s.id)}
-                              className={`auth-button ${selectedSensorId === s.id ? 'active' : ''}`}
+                              className={`auth-button flex-grow md:flex-initial text-center ${selectedSensorId === s.id ? 'active' : ''}`}
                             >
                               {s.shortName}
                             </button>
@@ -107,7 +107,7 @@ const MainDashboard = ({ onNavigate }) => {
                     </div>
                  </div>
 
-                 <div className="flex flex-col gap-3">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1 gap-3">
                     {SENSORS.map(s => (
                        <GaugeWidget
                          key={s.id}
