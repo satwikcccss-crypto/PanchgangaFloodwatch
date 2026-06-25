@@ -19,12 +19,12 @@ const FloatingNavDock = ({
 
   return (
     <>
-      {/* Desktop Floating Navigation (Right Side) */}
-      <div className="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-[150] flex-col items-end gap-3 pointer-events-none">
+      {/* Desktop Floating Navigation (Left Side) */}
+      <div className="hidden md:flex fixed left-6 top-1/2 -translate-y-1/2 z-[150] flex-col items-start gap-3 pointer-events-none">
         
         {/* Station Submenu (Tooltip style) */}
         {showStationSubmenu && (
-          <div className="pointer-events-auto bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-3 shadow-2xl w-56 flex flex-col gap-1 transition-all mr-2">
+          <div className="pointer-events-auto bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-3 shadow-2xl w-56 flex flex-col gap-1 transition-all ml-2">
             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest px-2 mb-1.5 block">Select Station</span>
             {SENSORS.map(s => (
               <button
@@ -60,7 +60,7 @@ const FloatingNavDock = ({
             title="Dashboard"
           >
             <LayoutGrid className="w-5 h-5" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Dashboard
             </span>
           </button>
@@ -76,7 +76,7 @@ const FloatingNavDock = ({
             title="Radar Network"
           >
             <Radio className="w-5 h-5" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Radar Network
             </span>
           </button>
@@ -88,7 +88,7 @@ const FloatingNavDock = ({
             title="View Details"
           >
             <Activity className="w-5 h-5" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Station Analytics: {activeSensor.shortName}
             </span>
           </button>
@@ -102,7 +102,7 @@ const FloatingNavDock = ({
             title="Switch Stations"
           >
             <MapPin className="w-5 h-5" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Select Station ({activeSensor.shortName})
             </span>
           </button>
@@ -116,7 +116,7 @@ const FloatingNavDock = ({
             title="Refresh Telemetry"
           >
             <RefreshCw className="w-4 h-4" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Sync Telemetry
             </span>
           </button>
@@ -128,7 +128,7 @@ const FloatingNavDock = ({
             title="Scroll to Top"
           >
             <ArrowUp className="w-4 h-4" />
-            <span className="absolute right-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+            <span className="absolute left-18 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
               Back to Top
             </span>
           </button>
