@@ -1,0 +1,23 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Proxy ThingSpeak API to avoid CORS issues
+[[redirects]]
+  from = "/api/thingspeak/*"
+  to = "https://api.thingspeak.com/:splat"
+  status = 200
+  force = true
+
+# Proxy RTDAS NHP Maharashtra portal for river-level backup data
+[[redirects]]
+  from = "/api/rtdas/*"
+  to = "http://115.242.142.174:8080/NHPMH/Public/:splat"
+  status = 200
+  force = true
+
+# Handle React Router (SPA fallback) just in case
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
