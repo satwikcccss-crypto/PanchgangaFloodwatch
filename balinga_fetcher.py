@@ -17,7 +17,7 @@ Usage:
   python balinga_fetcher.py --loop --interval 300  # every 5 min
 """
 
-import requests, re, csv, json, os, time, logging, argparse
+import requests, re, csv, json, os, time, logging, argparse, random
 from datetime import datetime
 
 logging.basicConfig(
@@ -61,24 +61,44 @@ CSV_HEADERS = ["Fetched At"] + [label for _, label in FIELDS]
 
 # ── Session ─────────────────────────────────────────────────────────────────
 session = requests.Session()
-session.headers.update({
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/148.0.0.0",
-    "Accept":     "text/html,*/*",
-})
+
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0"
+]
 
 # ── Core functions ───────────────────────────────────────────────────────────
 
 def fetch_page():
-    try:
-        r = session.get(URL, timeout=30)
-        r.raise_for_status()
-        return r.text
-    except requests.exceptions.ConnectionError:
-        log.error("❌ Cannot connect to server. Check office WiFi / VPN.")
-    except requests.exceptions.Timeout:
-        log.error("⏱  Request timed out.")
-    except Exception as e:
-        log.error(f"Fetch error: {e}")
+    # Proxies to bypass IP blocking (similar to CORS proxies used in frontend)
+    proxy_urls = [
+        URL, # Direct
+        f"https://corsproxy.io/?{URL}",
+        f"https://thingproxy.freeboard.io/fetch/{URL}"
+    ]
+    
+    for attempt_url in proxy_urls:
+        ua = random.choice(USER_AGENTS)
+        session.headers.update({
+            "User-Agent": ua,
+            "Accept": "text/html,*/*",
+        })
+        log.info(f"Attempting to fetch via: {attempt_url} (UA: {ua.split()[0]}...)")
+        try:
+            r = session.get(attempt_url, timeout=30)
+            r.raise_for_status()
+            log.info("✅ Fetch successful")
+            return r.text
+        except requests.exceptions.ConnectionError:
+            log.warning(f"⚠️ ConnectionError on {attempt_url}")
+        except requests.exceptions.Timeout:
+            log.warning(f"⏱ Timeout on {attempt_url}")
+        except Exception as e:
+            log.warning(f"⚠️ Fetch error on {attempt_url}: {e}")
+            
+    log.error("❌ All fetch attempts failed. Check office WiFi / VPN or if the server is down completely.")
     return None
 
 
