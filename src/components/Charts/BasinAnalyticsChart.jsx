@@ -43,7 +43,8 @@ const BasinAnalyticsChart = ({ history, dangerLevels, markerColor = '#0f4c81' })
           borderColor: markerColor,
           backgroundColor: `${markerColor}20`,
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: waterLevels.map((_, i) => i === waterLevels.length - 1 ? 4 : 0),
+          pointBackgroundColor: markerColor,
           fill: true,
           tension: 0.4
         },

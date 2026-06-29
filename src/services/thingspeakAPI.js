@@ -132,7 +132,7 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
   if (sensor.rtdasId) {
     try {
       const baseUrl = import.meta.env.BASE_URL || '/';
-      const csvUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}balinga_river_levels.csv`;
+      const csvUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}balinga_river_levels.csv?t=${Date.now()}`;
       
       const response = await axios.get(csvUrl, { timeout: 10000 });
       if (response.data && typeof response.data === 'string') {
@@ -222,7 +222,7 @@ export const fetchAllSensors = async () => {
             if (latestTime > lastTime) {
                history.push(normalized);
                if (history.length > 150) history.shift();
-            } else {
+            } else if (latestTime === lastTime) {
                history[history.length - 1] = normalized;
             }
           }
@@ -273,7 +273,7 @@ export const fetchAllSensors = async () => {
             if (latestTime > lastTime) {
                history.push(normalized);
                if (history.length > 150) history.shift();
-            } else {
+            } else if (latestTime === lastTime) {
                history[history.length - 1] = normalized;
             }
           }
