@@ -212,7 +212,21 @@ export const fetchAllSensors = async () => {
         const rtdasReading = rtdasData.get(sensor.rtdasId);
         if (rtdasReading) {
           const normalized = normalizeRtdasReading(rtdasReading, sensor);
-          const history = generateHistoricalDataFromLatest(normalized, sensor, 150);
+          
+          let history = await fetchHistoricalData(sensor.id, 150);
+          if (!history || history.length === 0 || history.every(h => h.isMockData)) {
+            history = generateHistoricalDataFromLatest(normalized, sensor, 150);
+          } else {
+            const lastTime = new Date(history[history.length - 1].timestamp).getTime();
+            const latestTime = new Date(normalized.timestamp).getTime();
+            if (latestTime > lastTime) {
+               history.push(normalized);
+               if (history.length > 150) history.shift();
+            } else {
+               history[history.length - 1] = normalized;
+            }
+          }
+          
           const alertLevel = determineAlertLevel(history, sensor.dangerLevels);
           const rateOfChange = calculateRateOfChange(history);
           console.log(`[FetchAll] 🌊 ${sensor.shortName}: RTDAS COMPULSORY → ${normalized.waterLevel}m`);
@@ -249,7 +263,21 @@ export const fetchAllSensors = async () => {
         const rtdasReading = rtdasData.get(sensor.rtdasId);
         if (rtdasReading) {
           const normalized = normalizeRtdasReading(rtdasReading, sensor);
-          const history = generateHistoricalDataFromLatest(normalized, sensor, 150);
+          
+          let history = await fetchHistoricalData(sensor.id, 150);
+          if (!history || history.length === 0 || history.every(h => h.isMockData)) {
+            history = generateHistoricalDataFromLatest(normalized, sensor, 150);
+          } else {
+            const lastTime = new Date(history[history.length - 1].timestamp).getTime();
+            const latestTime = new Date(normalized.timestamp).getTime();
+            if (latestTime > lastTime) {
+               history.push(normalized);
+               if (history.length > 150) history.shift();
+            } else {
+               history[history.length - 1] = normalized;
+            }
+          }
+          
           const alertLevel = determineAlertLevel(history, sensor.dangerLevels);
           const rateOfChange = calculateRateOfChange(history);
           console.log(`[FetchAll] 📡 ${sensor.shortName}: RTDAS fallback → ${normalized.waterLevel}m`);
