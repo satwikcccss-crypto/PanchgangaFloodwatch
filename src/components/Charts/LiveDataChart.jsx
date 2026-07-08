@@ -29,33 +29,9 @@ ChartJS.register(
   Filler
 );
 
-const LiveDataChart = ({ sensorId, sensorData }) => {
-  const [historicalData, setHistoricalData] = useState({});
-  const [loading, setLoading] = useState(false);
-
-  // Fetch historical data when sensorId changes
-  useEffect(() => {
-    if (!sensorId) return;
-    
-    const loadHistory = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchHistoricalData(sensorId, 60);
-        setHistoricalData(prev => ({ ...prev, [sensorId]: data }));
-      } catch (err) {
-        console.error('Chart data fetch error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadHistory();
-    const interval = setInterval(loadHistory, 120000);
-    return () => clearInterval(interval);
-  }, [sensorId]);
-
+const LiveDataChart = ({ sensorId, data }) => {
   const activeSensor = SENSORS.find(s => s.id === sensorId);
-  const activeData = historicalData[sensorId] || [];
+  const activeData = data?.history || [];
 
   // Chart configuration
   const chartData = useMemo(() => {
@@ -159,16 +135,12 @@ const LiveDataChart = ({ sensorId, sensorData }) => {
 
   return (
     <div className="w-full h-full">
-      {loading && activeData.length === 0 ? (
+      {!activeData || activeData.length === 0 ? (
          <div className="h-full flex items-center justify-center text-slate-400">
             <span className="text-xs uppercase tracking-widest font-bold">Initializing Analytical Feed...</span>
          </div>
-      ) : activeData.length > 0 ? (
-        <Line data={chartData} options={chartOptions} />
       ) : (
-        <div className="h-full flex items-center justify-center text-slate-300">
-          <span className="text-xs uppercase tracking-widest font-bold">Awaiting Telemetry Data</span>
-        </div>
+        <Line data={chartData} options={chartOptions} />
       )}
     </div>
   );

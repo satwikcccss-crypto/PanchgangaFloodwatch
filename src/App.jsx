@@ -43,7 +43,7 @@ function App() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 900000); // 15 minutes — RTDAS update cadence
+    const interval = setInterval(loadData, 60000); // 1 minute polling for near real-time updates
     return () => clearInterval(interval);
   }, []);
 

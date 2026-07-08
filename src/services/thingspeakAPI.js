@@ -224,6 +224,9 @@ export const fetchAllSensors = async () => {
                if (history.length > 150) history.shift();
             } else if (latestTime === lastTime) {
                history[history.length - 1] = normalized;
+            } else {
+               // History is newer than real-time fetch, sync them to avoid mismatch
+               Object.assign(normalized, history[history.length - 1]);
             }
           }
           
@@ -275,6 +278,9 @@ export const fetchAllSensors = async () => {
                if (history.length > 150) history.shift();
             } else if (latestTime === lastTime) {
                history[history.length - 1] = normalized;
+            } else {
+               // History is newer than real-time fetch, sync them to avoid mismatch
+               Object.assign(normalized, history[history.length - 1]);
             }
           }
           
