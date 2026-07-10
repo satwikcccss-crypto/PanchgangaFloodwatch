@@ -41,7 +41,7 @@ export const SENSORS = [
     description: 'Ultrasonic radar sensor on the Chhatrapati Shivaji Maharaj Bridge over the Panchganga River, Kolhapur. Monitors real-time water stage at the primary urban crossing. Alert thresholds referenced to Rajaram KT Weir MSL datum (WRD Maharashtra).',
     dangerLevels: {
       warning: 542.73,
-      danger: 543.33,
+      danger: 542.00,
       extreme: 544.33,
       hfl: 545.33
     },
@@ -66,7 +66,7 @@ export const SENSORS = [
     description: 'River level station at Wadange fetched directly via the RTDAS portal of the Maharashtra WRD (NHPMH).',
     dangerLevels: {
       warning: 542.73,
-      danger: 543.33,
+      danger: 542.00,
       extreme: 544.33,
       hfl: 545.33
     },
@@ -116,7 +116,7 @@ export const SENSORS = [
     description: 'Ultrasonic radar sensor at Nitawade Bridge over the Kasari River — a major Panchganga tributary. Monitors upstream inflow into the Kolhapur city reach. Alert levels per WRD RTDSS Krishna (RBL 532.0 m MSL).',
     dangerLevels: {
       warning: 542.81,
-      danger: 543.61,
+      danger: 542.00,
       extreme: 544.61,
       hfl: 545.61
     },
@@ -166,7 +166,7 @@ export const SENSORS = [
     description: 'Ultrasonic radar sensor at Wilson Bridge over the Jayanti Nala — an urban stormwater nala draining into the Panchganga within Kolhapur city. Critical for urban flood early warning. Thresholds aligned with Rajaram KT Weir MSL datum.',
     dangerLevels: {
       warning: 548.66,
-      danger: 549.46,
+      danger: 542.00,
       extreme: 550.46,
       hfl: 551.46
     },
