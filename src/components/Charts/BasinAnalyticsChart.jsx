@@ -111,7 +111,7 @@ const BasinAnalyticsChart = ({ history, dangerLevels, markerColor = '#0f4c81' })
                 let label = context.dataset.label || '';
                 if (label) label += ': ';
                 if (context.parsed.y !== null) {
-                    label += context.parsed.y + (context.datasetIndex === 0 ? ' m' : ' m/hr');
+                    label += context.parsed.y + ' m MSL';
                 }
                 return label;
             }

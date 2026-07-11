@@ -346,8 +346,12 @@ const parseThingSpeakResponse = (data, sensor) => {
     waterLevel = parseFloat((549.35 - (waterLevel * 0.3048)).toFixed(2));
   }
 
-  const temperature = parseFloat(data[THINGSPEAK_FIELDS.temperature]) || null;
-  const batteryVoltage = parseFloat(data[THINGSPEAK_FIELDS.batteryVoltage]) || null;
+  // Shivaji Bridge channel has field2 = Sensor Voltage (not temperature)
+  const isShivajiBridge = sensor.id === 'shivaji_bridge';
+  const temperature = isShivajiBridge ? null : (parseFloat(data[THINGSPEAK_FIELDS.temperature]) || null);
+  const batteryVoltage = isShivajiBridge
+    ? (parseFloat(data[THINGSPEAK_FIELDS.temperature]) || null)  // field2 = Sensor Voltage
+    : (parseFloat(data[THINGSPEAK_FIELDS.batteryVoltage]) || null);
   const signalStrength = parseFloat(data[THINGSPEAK_FIELDS.signalStrength]) || null;
   
   return {
