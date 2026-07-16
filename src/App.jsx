@@ -11,9 +11,20 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [selectedSensorId, setSelectedSensorId] = useState(SENSORS[0].id);
   const [detailedSensor, setDetailedSensor] = useState(null);
-  const [sensorData, setSensorData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState(null);
+  const [sensorData, setSensorData] = useState(() => {
+    try {
+      const cached = localStorage.getItem('panchganga_sensor_cache');
+      return cached ? JSON.parse(cached) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+  const [loading, setLoading] = useState(() => {
+    return !localStorage.getItem('panchganga_sensor_cache');
+  });
+  const [lastUpdate, setLastUpdate] = useState(() => {
+    return localStorage.getItem('panchganga_sensor_last_update') || null;
+  });
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   // 1. Initialize Advanced Security Shield
@@ -24,17 +35,26 @@ function App() {
 
   // 2. Fetch and synchronize telemetry data
   const loadData = async () => {
-    setLoading(true);
+    // Only show global loading on first boot if no cache
+    if (Object.keys(sensorData).length === 0) {
+      setLoading(true);
+    }
+    
     try {
       const data = await fetchAllSensors();
       setSensorData(data);
-      setLastUpdate(new Date().toLocaleTimeString('en-IN', { 
+      const currentTime = new Date().toLocaleTimeString('en-IN', { 
         timeZone: 'Asia/Kolkata', 
         hour: '2-digit', 
         minute: '2-digit', 
         second: '2-digit' 
-      }));
+      });
+      setLastUpdate(currentTime);
       setLoading(false);
+      
+      // Update cache
+      localStorage.setItem('panchganga_sensor_cache', JSON.stringify(data));
+      localStorage.setItem('panchganga_sensor_last_update', currentTime);
     } catch (err) {
       console.error('Failed to fetch sensor data:', err);
       setLoading(false);

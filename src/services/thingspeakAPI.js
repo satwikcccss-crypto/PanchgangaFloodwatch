@@ -36,7 +36,7 @@ export const fetchLatestReading = async (sensorId) => {
   try {
     const url = `${THINGSPEAK_BASE_URL}/${sensor.channelId}/feeds/last.json`;
     const response = await axios.get(url, {
-      params: { api_key: sensor.apiKey },
+      params: { api_key: sensor.apiKey, t: Date.now() },
       timeout: 10000,
     });
     const parsed = parseThingSpeakResponse(response.data, sensor);
@@ -128,8 +128,10 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
   const sensor = SENSORS.find(s => s.id === sensorId);
   if (!sensor) throw new Error(`Sensor ${sensorId} not found`);
   
-  // If sensor has an RTDAS ID, fetch from local/hosted CSV history first
-  if (sensor.rtdasId) {
+  const hasThingSpeak = sensor.channelId && !sensor.channelId.includes('YOUR_CHANNEL') && sensor.channelId !== '';
+
+  // If sensor has an RTDAS ID, and (no ThingSpeak OR it's rtdasCompulsory), fetch from local/hosted CSV history first
+  if (sensor.rtdasId && (!hasThingSpeak || sensor.rtdasCompulsory)) {
     try {
       const baseUrl = import.meta.env.BASE_URL || '/';
       const csvUrl = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}balinga_river_levels.csv?t=${Date.now()}`;
@@ -154,7 +156,7 @@ export const fetchHistoricalData = async (sensorId, results = 150) => {
   try {
     const url = `${THINGSPEAK_BASE_URL}/${sensor.channelId}/feeds.json`;
     const response = await axios.get(url, {
-      params: { api_key: sensor.apiKey, results },
+      params: { api_key: sensor.apiKey, results, t: Date.now() },
       timeout: 15000,
     });
     
@@ -248,16 +250,36 @@ export const fetchAllSensors = async () => {
       if (hasThingSpeak) {
         try {
           const history = await fetchHistoricalData(sensor.id, 150);
-          const latestReading = history[history.length - 1] || generateMockData(sensor);
+          let latestReading = history[history.length - 1] || generateMockData(sensor);
+          let dataSource = 'ThingSpeak';
+
+          // Smart RTDAS Fallback: If ThingSpeak data is older than RTDAS data, use RTDAS!
+          if (sensor.rtdasId) {
+            const rtdasReading = rtdasData.get(sensor.rtdasId);
+            if (rtdasReading) {
+              const normalizedRtdas = normalizeRtdasReading(rtdasReading, sensor);
+              const rtdasTime = new Date(normalizedRtdas.timestamp).getTime();
+              const tsTime = new Date(latestReading.timestamp).getTime();
+
+              if (rtdasTime > tsTime) {
+                console.log(`[FetchAll] 🔄 ${sensor.shortName}: ThingSpeak stale. Falling back to newer RTDAS reading.`);
+                history.push(normalizedRtdas);
+                if (history.length > 150) history.shift();
+                latestReading = normalizedRtdas;
+                dataSource = 'ThingSpeak (RTDAS Fallback)';
+              }
+            }
+          }
+
           const alertLevel = determineAlertLevel(history, sensor.dangerLevels);
           const rateOfChange = calculateRateOfChange(history);
           return {
             sensorId: sensor.id,
-            data: { ...latestReading, history, alertLevel, rateOfChange, dataSource: 'ThingSpeak' }
+            data: { ...latestReading, history, alertLevel, rateOfChange, dataSource }
           };
         } catch (tsError) {
-          console.warn(`[FetchAll] ThingSpeak failed for ${sensor.shortName}, trying RTDAS fallback...`);
-          // Fall through to RTDAS fallback
+          console.warn(`[FetchAll] ThingSpeak failed for ${sensor.shortName}, trying strict RTDAS fallback...`);
+          // Fall through to Path C
         }
       }
 
@@ -344,6 +366,12 @@ const parseThingSpeakResponse = (data, sensor) => {
     // Sensor MSL height is 549.35m. Sensor measures raw distance in FEET.
     // Convert feet to meters (1 foot = 0.3048 meters) and subtract from MSL.
     waterLevel = parseFloat((549.35 - (waterLevel * 0.3048)).toFixed(2));
+  }
+
+  // Calculate MSL water level from raw distance for Ichalkaranji Bridge
+  if (sensor.id === 'ichalkaranji_br' && waterLevel > 0) {
+    // Sensor MSL height is 540.787m. Sensor measures raw distance in meters.
+    waterLevel = parseFloat((540.787 - waterLevel).toFixed(2));
   }
 
   // Shivaji Bridge channel has field2 = Sensor Voltage (not temperature)

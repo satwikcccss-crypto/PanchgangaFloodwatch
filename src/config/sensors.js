@@ -76,10 +76,10 @@ export const SENSORS = [
     id: 'ichalkaranji_br',
     name: 'Ichalkaranji Bridge',
     shortName: 'Ichalkaranji',
-    channelId: _dec('WU9VUl9DSEFOTkVMX0lEXzI='),
-    apiKey: _dec('WU9VUl9BUElfS0VZXzI='),
+    channelId: _dec('MzQxNzg3Mg=='),
+    apiKey: _dec('M1FQU0VUNEVPVldNRElHUQ=='),
     rtdasId: _dec('MjAwNw=='),  // 2007
-    sensorType: 'Ultrasonic Radar — RTDAS',
+    sensorType: 'Ultrasonic Radar — ThingSpeak',
     river: 'Panchganga River',
     location: {
       // DMS: 16°39'57.04"N, 74°28'33.47"E (field-verified)
